@@ -7,19 +7,20 @@
             </el-breadcrumb>
             <div >
                 <el-select
-                    v-model="value9"
+                    v-model="value"
                     multiple
                     filterable
                     remote
+                    @change="test(value)"
                     reserve-keyword
                     placeholder="请输入设备关键词"
                     :remote-method="remoteMethod"
                     :loading="loading" style="float:right;margin-right:60px;margin-top:-20px;">
                     <el-option
-                    v-for="item in options4"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in options"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name" >
                     </el-option>
                 </el-select>
                 
@@ -30,7 +31,7 @@
             <div class="grid">
                 <template >
                     <el-table :data="tableData3" border style="width:50%;margin-top:20px;float:left;" height="55vh" class="el" :default-sort = "{prop: 'date', order: 'descending'}">
-                        <el-table-column fixed prop="date" label="箱体编号" width="95" sortable></el-table-column>
+                        <el-table-column fixed prop="name" label="箱体编号" width="95" sortable></el-table-column>
                         <el-table-column prop="name" label="箱内温度°C" width="72" sortable></el-table-column>
                         <el-table-column prop="name" label="箱内湿度%" width="72" sortable></el-table-column>
                         <el-table-column prop="name" label="机组状态" width="50"></el-table-column>
@@ -59,11 +60,12 @@
     export default {
         data() {
             return {
-            options4: [],
-            value9: [],
+            options: [],
+            value: [],
             list: [],
-            loading: false,
-            states:[],   //应放入接口数据
+            loading: false, 
+            items:[],
+            tableData3:[]
             
         }
     },
@@ -74,8 +76,11 @@
       });
     },
     methods: {
-        
-    
+        test(value){
+            this.tableData3 = this.items.filter((item)=>{
+                return value.indexOf(item.name)>-1;
+            });
+        },
     //这几个地方加this
       initMap () {
         this.createMap() ; //创建地图 
@@ -111,22 +116,23 @@
       getstates() {
         
         this.$axios.post('/api/d/container_list_json',this.qs.stringify({})).then((data) =>{
-           console.log(this.response.data)
-            this.states=response.data.name;
+           console.log(data)
+            this.items=data.data.result;
         });
       }, 
       remoteMethod(query) {
+          console.log("query===",query,this.items);
         if (query !== '') {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
-            this.options4 = this.list.filter(item => {
-              return item.label.toLowerCase()
+            this.options = this.items.filter(item => {
+              return item.name.toLowerCase()
                 .indexOf(query.toLowerCase()) > -1;
             });
           }, 200);
         } else {
-          this.options4 = [];
+          this.options = [];
         }
       }
     },

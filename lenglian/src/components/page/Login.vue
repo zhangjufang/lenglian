@@ -51,7 +51,7 @@
                   if (data.data.code==200) {
                         localStorage.setItem('username',this.ruleForm.username);
                         
-                        this.$router.push('/');
+                        this.$router.push('/index');
                     } else {
                         alert('登陆失败:用户名或密码不正确');
                         return false;

@@ -74,7 +74,7 @@
                 fullscreen: false,
                 // editpass:false,
                 // name: 'jufang',
-                // message: 2
+                message: 2
             }
         },
         computed:{
