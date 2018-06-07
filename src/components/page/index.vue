@@ -1,70 +1,94 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item> 集装箱</el-breadcrumb-item>
-                <!-- <el-breadcrumb-item>报警历史记录 </el-breadcrumb-item> -->
-            </el-breadcrumb>
-            <div >
+        <div style="display: flex;justify-content: space-between;">
+            <div class="crumbs" style="width:100px;" >
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item> 集装箱</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="he" style="width:400px;height:30px;display: flex;justify-content: space-between;">
+                <div class="box" >全部集装箱</div>
+                <div class="box" >空载箱</div>
+                <div class="box">重载箱</div>
+            </div> 
+            <div>
                 <el-select
-                    v-model="value9"
+                    v-model="value"
                     multiple
                     filterable
                     remote
+                    @change="test(value)"
                     reserve-keyword
                     placeholder="请输入设备关键词"
                     :remote-method="remoteMethod"
-                    :loading="loading" style="float:right;margin-right:60px;margin-top:-20px;">
-                    <el-option
-                    v-for="item in options4"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    :loading="loading" style="margin-top:-10px;">
+                        <el-option
+                        v-for="item in options"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.name">
                     </el-option>
                 </el-select>
-                
             </div>
-            
         </div>
-        <div class="tab">
-            <div class="grid">
-                <template >
-                    <el-table :data="tableData3" border style="width:50%;margin-top:20px;float:left;" height="55vh" class="el" :default-sort = "{prop: 'date', order: 'descending'}">
-                        <el-table-column fixed prop="date" label="箱体编号" width="95" sortable></el-table-column>
-                        <el-table-column prop="name" label="箱内温度°C" width="72" sortable></el-table-column>
-                        <el-table-column prop="name" label="箱内湿度%" width="72" sortable></el-table-column>
-                        <el-table-column prop="name" label="机组状态" width="50"></el-table-column>
-                        <el-table-column prop="name" label="设定温度°C" width="60"></el-table-column>
-                        <el-table-column prop="name" label="回风温度°C" width="72" sortable></el-table-column>
-                        <el-table-column prop="name" label="出风温度°C" width="72" sortable></el-table-column>
-                        <el-table-column prop="name" label="环境温度°C" width="70"></el-table-column>
-                        <el-table-column prop="name" label="冷机电压" width="50"></el-table-column>
-                        <el-table-column prop="name" label="副电压" width="58" sortable></el-table-column>
-                        <el-table-column prop="name" label="机组电流" width="50"></el-table-column>
-                        <el-table-column prop="name" label="冷机电压" width="50"></el-table-column>
-                        <el-table-column prop="name" label="机组水温°C" width="70"></el-table-column>
-                        <el-table-column prop="name" label="吸气压力" width="50"></el-table-column>
-                        <el-table-column prop="name" label="排气压力" width="50"></el-table-column>
-                        <el-table-column prop="name" label="更新时间" width="100" sortable></el-table-column>
-                    </el-table>
-                </template>
-            </div>
+        <div class="tab" style="display: flex;justify-content: space-between;width:100%;">
+            <template>
+                <el-table :data="tableData3" style="width:50%;margin-top:20px;border:1px solid rgb(180, 173, 173);" height="50vh" class="el" :default-sort = "{prop: 'date', order: 'descending'}">
+                    <el-table-column fixed prop="name" label="箱体编号" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
+                    <el-table-column prop="zone_status" label="机组状态" width="75"></el-table-column>
+                    <el-table-column prop="cooler_set_temp" label="设定温度°C" width="90"></el-table-column>
+                    <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" label="环境温度°C" width="110"></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="冷机电压" width="80"></el-table-column>
+                    <el-table-column prop="gps_voltage" label="副电压" width="90" sortable></el-table-column>
+                    <el-table-column prop="current" label="机组电流" width="80"></el-table-column>
+                    <el-table-column prop="water_temp" label="机组水温°C" width="90"></el-table-column>
+                    <el-table-column prop="suction_press" label="吸气压力" width="80"></el-table-column>
+                    <el-table-column prop="discharge_press" label="排气压力" width="80"></el-table-column>
+                    <el-table-column prop="insert_time" label="更新时间" width="100" sortable></el-table-column>
+                </el-table>
+            </template>
            <div id="dituContent"></div>
         </div>
-
+        <div class="grid">
+            <template >
+                <el-table :data="tableData3" style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);;" height="20vh" class="el" :default-sort = "{prop: 'date', order: 'descending'}">
+                    <el-table-column fixed prop="name" label="箱体编号" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
+                    <el-table-column prop="zone_status" label="机组状态" width="75"></el-table-column>
+                    <el-table-column prop="cooler_set_temp" label="设定温度°C" width="90"></el-table-column>
+                    <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" label="环境温度°C" width="110"></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="冷机电压" width="80"></el-table-column>
+                    <el-table-column prop="gps_voltage" label="副电压" width="90" sortable></el-table-column>
+                    <el-table-column prop="current" label="机组电流" width="80"></el-table-column>
+                    <el-table-column prop="water_temp" label="机组水温°C" width="90"></el-table-column>
+                    <el-table-column prop="suction_press" label="吸气压力" width="80"></el-table-column>
+                    <el-table-column prop="discharge_press" label="排气压力" width="80"></el-table-column>
+                    <el-table-column prop="insert_time" label="更新时间" width="100" sortable></el-table-column>
+                </el-table>
+            </template>
+        </div>
     </div>
 </template>
+
 
 <script>
     export default {
         data() {
             return {
-            options4: [],
-            value9: [],
+            options: [],
+            value: [],
             list: [],
-            loading: false,
-            states:[],   //应放入接口数据
-            
+            loading: false, 
+            items:[],
+            tableData3:[],
+            points:[]
         }
     },
    mounted () {
@@ -74,14 +98,16 @@
       });
     },
     methods: {
-        
-    
-    //这几个地方加this
+        test(value){
+            this.tableData3 = this.items.filter((item)=>{
+                return value.indexOf(item.name)>-1;
+            });
+        },
       initMap () {
         this.createMap() ; //创建地图 
         this.setMapEvent();//设置地图事件
         this.addMapControl();//向地图添加控件
-        // this.addMarker();//向地图中添加marker
+        this.addMarker();//向地图中添加marker
       },
       createMap(){
         var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
@@ -106,72 +132,87 @@
         var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
         map.addControl(ctrl_sca);
       },
-    
+      //添加标注
+        addMarker(){
+            map.clearOverlays();
+            var point=this;
+            var pointX=point.split(',');
+        　　 var marker = new BMap.Marker(new BMap.Point(pointX[longitude],pointX[latitude])); // 创建标注
+        　　 map.addOverlay(marker); // 将标注添加到地图中
+            var infoWindow = new BMap.InfoWindow("欢迎光临"); // 创建信息窗口对象
+            marker.addEventListener("click", function(){ this.openInfoWindow(infoWindow);})
+        },
       //搜索框
       getstates() {
-        
         this.$axios.post('/api/d/container_list_json',this.qs.stringify({})).then((data) =>{
-           console.log(this.response.data)
-            this.states=response.data.name;
+           console.log(data)
+            this.items=data.data.result;
+        });
+      }, 
+      //设备列表
+      getlist() {
+        this.$axios.post('/api/d/container_latest_json',this.qs.stringify({})).then((data) =>{
+           console.log(data)
+            this.items=data.data.result;
+            this.tableData3=data.data.result;
+            
         });
       }, 
       remoteMethod(query) {
+        console.log("query===",query,this.items);
         if (query !== '') {
           this.loading = true;
           setTimeout(() => {
             this.loading = false;
-            this.options4 = this.list.filter(item => {
-              return item.label.toLowerCase()
+            this.options = this.items.filter(item => {
+              return item.name.toLowerCase()
                 .indexOf(query.toLowerCase()) > -1;
             });
           }, 200);
         } else {
-          this.options4 = [];
+          this.options = [];
         }
       }
     },
       created: function(){
-          this.getstates()
-        // var that = this;
-        // this.ajax.post(" /d/container_latest_json", {}).then(function(data) {
-        // var ser = data.data.data;
-        // // console.log(ser);
-        // var names = [];
-        // for (var key in ser) {
-        //     var name = ser[key].itemList;
-        //     // console.log(ser);
-        //     for (var vice in name) {
-        //     names.push(name[vice].name);
-        //     // console.log(name)
-        //     }
-        // }
-        // that.names = names;
-        // // console.log(names);
-        // });
+        this.getstates()
+        this.getlist()
       }
      
 }
 </script>
 
 <style>
-
-.tab{
-    height:700px;
-    background-color: #fff;
-    border-radius: 6px; 
+.box{
+    width:110px;
+    height: 35px;
+    line-height: 35px;
+    margin-left: -20px;
+    margin-top:-10px;
+    border: 2px solid #005fc6;
+    background-color: #ffffff;
+    border-radius: 5px;
+    font-size: 14px;
+    padding-left: 10px;
 }
-.grid{
-    margin-left:20px;
+.tab{
+    border-top:2px solid rgb(180, 173, 173);
 }
 #dituContent{
   float: left;
-  height:55vh;
+  height:50vh;
   margin-top:20px;
   margin-left:30px;
   border:1px solid transparent;
-  border-radius: 6px;
-  /* position: relative; */
-  width:45%;
+  border-radius: 3px;
+  width:40%;
+  border:1px solid rgb(180, 173, 173);
   
 }
+/* .infoWindow{
+    width:200px;
+    height:200px;
+    border:1px solid #000;
+
+} */
 </style>

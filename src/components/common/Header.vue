@@ -13,7 +13,7 @@
                 <!-- 消息中心 -->
                 <div class="btn-bell">
                     <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/message">
+                        <router-link to="/tabs">
                             <i class="el-icon-bell"></i>
                         </router-link>
                     </el-tooltip>
@@ -74,7 +74,7 @@
                 fullscreen: false,
                 // editpass:false,
                 // name: 'jufang',
-                // message: 2
+                message: 2
             }
         },
         computed:{

@@ -3,7 +3,7 @@
         <div class="login">
             <div class="ms-logo"><img src="../images/irlogo.png" alt=""></div>
             <div class="ms-login" style="padding:50px;">
-                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
+                <el-form :model="ruleForm"  ref="ruleForm" label-width="0px" class="demo-ruleForm">
                     <el-form-item prop="userName" style="margin-top: -20px;margin-left:30px;">
                         <span >{{$t('login.username')}}:</span>&#160;
                         <el-input v-model="ruleForm.username" placeholder="username" style="width:60%;margin-left:20px;"></el-input>
@@ -44,13 +44,12 @@
             }
         },
         methods: {
-             submitForm(formName) {
-                 
+             submitForm(formName) {  
                this.$axios.post('/api/welcome/user_login',this.qs.stringify({userName:this.ruleForm.username,userPassword:this.ruleForm.password})).then((data) =>{
                 //    console.log('success====',data)
                   if (data.data.code==200) {
                         localStorage.setItem('username',this.ruleForm.username);
-                        this.$router.push('/');
+                        this.$router.push('/index');
                     } else {
                         alert('登陆失败:用户名或密码不正确');
                         return false;
