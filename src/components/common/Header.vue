@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <div class="logo"><img src="../images/irlogo.png"> </div>
-        <div class = "logo" style="margin-left:-150px;">后台管理系统</div>
+        <div class = "logo" style="margin-left:-150px;">集装箱物联网平台</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->

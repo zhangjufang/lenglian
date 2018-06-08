@@ -145,9 +145,6 @@ export default new Router({
             path: '*',
             redirect: '/404'
         },
-        // {//地图的公共部分
-        //     path: '/baidu_map',
-        //     component: resolve => require(['../components/page/baidu_map.vue'], resolve)
-        // }
+       
     ]
 })

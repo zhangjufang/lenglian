@@ -1,5 +1,5 @@
 <template>
-    <div class="tags" v-if="showTags">
+    <!-- <div class="tags" v-if="showTags">
         <el-button class="bon"><i class="el-icon-d-arrow-left"></i></el-button>
         <ul>
             <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" style="text-decoration: none;">
@@ -21,7 +21,7 @@
             </el-dropdown>
         </div>
         
-    </div>
+    </div> -->
 </template>
 
 <script>
