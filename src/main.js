@@ -21,7 +21,7 @@ Vue.prototype.$echarts = echarts ;
 import Vuex from 'vuex'
 // import store from './vuex/store'
 import 'jquery'
-import map from './m/baidumap'
+import baidumap from './m/baidumap'
 Vue.use(Vuex)
 Vue.use(ElementUI, { size: 'small' });
 Vue.prototype.$axios = axios;

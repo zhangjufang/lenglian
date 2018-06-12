@@ -1,5 +1,0 @@
-'use strict'
-module.exports = {
-  NODE_ENV: '"production"'
-  // API_ROOT: '"//www.baidu.com/api"'//生产环境的接口
-}
