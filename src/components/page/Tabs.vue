@@ -9,8 +9,10 @@
     <el-select v-model="value4" filterable placeholder="请选择">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
       </el-option>
-    </el-select>   
+    </el-select>
+		<div id="myChart" :style="{width: '90%', height: '350px'}"></div>   
   </div>
+	
 </template>
 
 <script>
@@ -29,13 +31,32 @@ export default {
           value: ''            
         }
       },
-      methods: {  
-      },
+      mounted() {
+				this.drawLine();
+			},
+  methods: {
+    drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('myChart'))
+        // 绘制图表
+        myChart.setOption({
+            title: { text: '冷机数据' },
+            tooltip: {},
+            xAxis: {
+                data: ["1","2","3","4","5","6"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [1,2,3,4,5,] 
+            }]
+        });
+    }
+  
+  }
 }
-
 </script>
 
 <style scoped>
-
-
 </style>
