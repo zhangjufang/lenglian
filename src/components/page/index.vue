@@ -68,7 +68,7 @@
                     <el-table-column prop="suction_press" label="吸气压力" width="70"></el-table-column>
                     <el-table-column prop="discharge_press" label="排气压力" width="70"></el-table-column>
                     <el-table-column prop="insert_time" label="更新时间" width="100" sortable></el-table-column>
-                    <el-table-column prop="insert_time" label="地址"></el-table-column>
+                    <el-table-column prop="address" label="地址"></el-table-column>
                 </el-table>
             </template>
         </div>
@@ -77,176 +77,248 @@
 
 
 <script>
-import BMap from '../common/BMap';
-    export default {
-        data() {
-            return {
-            options: [],
-            value: [],
-            list: [],
-            loading: false, 
-            items:[],
-            tableData3:[],
-            points:[],
-            states:[],
-            map:null,
-        }
+import BMap from "../common/BMap";
+import lnglatCon from "../common/lnglat-convertor.js";
+export default {
+  data() {
+    return {
+      options: [],
+      value: [],
+      list: [],
+      loading: false,
+      items: [],
+      tableData3: [],
+      points: [],
+      states: [],
+      map: null,
+      markers:[]
+    };
+  },
+  mounted() {
+    this.getstates();
+    // this.infoWindow();
+    this.getlist();
+    this.list = this.states.map(item => {
+      return { value: item, label: item };
+    });
+  },
+  methods: {
+    receiveMap(map) {
+      this.map = map;
     },
-   mounted () {
-        this.getstates();
-        // this.infoWindow();
-        this.getlist();
-        this.list = this.states.map(item => {
-        return { value: item, label: item};
+    test(value) {
+      this.tableData3 = this.items.filter((item,index) => {
+
+        if(value.indexOf(item.name) > -1){
+            // console.log(this.markers,this.markers[index]);
+            this.markers[index].V.click();
+            return true;
+        }else{
+            return false;
+        }
       });
     },
-    methods: {
-        receiveMap(map){
-            this.map = map;
-        },
-        test(value){
-            this.tableData3 = this.items.filter((item)=>{
-                return value.indexOf(item.name)>-1;
-            });
-        },
-      //搜索框
-      getstates() {
-        this.$axios.post('/api/d/container_list_json',this.qs.stringify({})).then((data) =>{
-        //    console.log(data)
-            this.items=data.data.result;
+    //搜索框
+    getstates() {
+      this.$axios
+        .post("/api/d/container_list_json", this.qs.stringify({}))
+        .then(data => {
+          //    console.log(data)
+          this.items = data.data.result;
         });
-      }, 
-      //设备列表
-      getlist() {
-        this.$axios.post('/api/d/container_latest_json',this.qs.stringify({})).then((data) =>{
-            this.items=data.data.result;
-            this.tableData3=data.data.result;
-            this.addMarker(data.data.result);
-        
-            // var conNum_total = 0;
-            // var conNum_online = 0;
-            // var conNum_offline = 0;
-            // var conNum_alarm = 0;
-            // var nowTime = new Date().getTime();
-            // nowTime = nowTime/1000 - 1200;
-            // for(var i = 0;i<this.items.length;i++ ){
-            //     conNum_total++;
-            //     if(this.items[i].insert_time > nowTime){
-            //         conNum_online ++;
-            //     }else{
-            //         conNum_offline++;
-            //     }
-            // }
+    },
+    //设备列表
+    getlist() {
+      this.$axios
+        .post("/api/d/container_latest_json", this.qs.stringify({}))
+        .then(data => {
+        //   console.log(data.data.result);
+          var result = data.data.result.map((item,i) => {
+            /**
+             * 各种-999转换为-
+             */
+            Object.keys(item).forEach(key => {
+              if (key == "zone_status") {
+                //机组状态值处理
+                if (item[key] == "0") {
+                  item[key] = "不明状态";
+                }
+              } else {
+                if (item[key] == "-999") {
+                  item[key] = "-";
+                }
+              }
+            });
+            /**
+             * 经纬度转换
+             */
+            var lnglat = lnglatCon.wgs84togcj02(
+              parseFloat(item.longitude),
+              parseFloat(item.latitude)
+            );
+            lnglat = lnglatCon.gcj02tobd09(lnglat[0], lnglat[1]);
+            item.longitude = lnglat[0];
+            item.latitude = lnglat[1];
+            /**
+             * 添加地址信息
+             */
+            var point = new window.BMap.Point(item.longitude, item.latitude);
+            var gc = new window.BMap.Geocoder();
+            gc.getLocation(point, (rs)=>{
+              var addComp = rs.addressComponents;
+                this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district);
+                // item.address = addComp.province + " " + addComp.city + " " + addComp.district;
+            });
+            return item;
+          });
+            // console.log('result==',result);
+          this.items = result;
+          this.tableData3 = result;
+          this.addMarker(result);
+
+          // var conNum_total = 0;
+          // var conNum_online = 0;
+          // var conNum_offline = 0;
+          // var conNum_alarm = 0;
+          // var nowTime = new Date().getTime();
+          // nowTime = nowTime/1000 - 1200;
+          // for(var i = 0;i<this.items.length;i++ ){
+          //     conNum_total++;
+          //     if(this.items[i].insert_time > nowTime){
+          //         conNum_online ++;
+          //     }else{
+          //         conNum_offline++;
+          //     }
+          // }
         });
-      }, 
-    addMarker(points){  // 创建图标对象     
-    // console.log(BMap,BMap.point);   
-        for(var i = 0;i <points.length;i++){  
-            var point = new window.BMap.Point(points[i].longitude,points[i].latitude);      
-            var  marker = new window.BMap.Marker(point);    
-            this.map.addOverlay(marker);
-             var opts = {    
-                width : 50,     // 信息窗口宽度    
-                height: 280,     // 信息窗口高度    
-                }  ;
-             var sContent ='<h3>'+points[i].name+'</h3>' ;
-                sContent+='</br>定位地址：';
-                sContent+='</br>定位时间：'+points[i].insert_time;
-                sContent+='</br>速    度：'+points[i].speed+'Km/h';
-                sContent+='</br>方    向：';
-                sContent+='</br>箱内温度：'+points[i].ambient_temp+'°C';
-                sContent+='</br>设定温度：'+points[i].cooler_set_temp+'°C';
-                sContent+='</br>出风温度：'+points[i].out_air_temp+'°C';
-                sContent+='</br>机组模式：'+points[i].zone_status
-                sContent+='</br>报警代码：'+points[i].zone_alarm_code;
-                sContent+='</br>数据时间：'+points[i].gps_time;
-                var infoWindow = new window.BMap.InfoWindow(sContent,opts); 
-            marker.addEventListener("click", function(e){  
-                //获取点的信息
-                this.map.openInfoWindow(infoWindow,point); //开启信息窗口
-            });
-            i++;
-        }
-     },
-    
-        
-      remoteMethod(query) {
-        // console.log("query===",query,this.items);
-        if (query !== '') {
-          this.loading = true;
-          setTimeout(() => {
-            this.loading = false;
-            this.options = this.items.filter(item => {
-              return item.name.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-            });
-          }, 200);
-        } else {
-          this.options = [];
-        }
+    },
+    addMarker(points) {
+      // 创建图标对象
+      // console.log(BMap,BMap.point);
+      for (let i = 0; i < points.length; i++) {
+        var point = new window.BMap.Point(
+          points[i].longitude,
+          points[i].latitude
+        );
+        var marker = new window.BMap.Marker(point);
+        this.map.addOverlay(marker);
+        var opts = {
+          width: 50, // 信息窗口宽度
+          height: 280 // 信息窗口高度
+        };
+
+        marker.addEventListener("click", function(e) {
+          //获取点的信息
+        //   console.log(marker,e.target);
+          var p = e.target;
+          var lng = p.getPosition().lng;
+          var lat = p.getPosition().lat;
+        //   var pon = new window.BMap.Point(lng, lat);
+        //   var gc = new window.BMap.Geocoder();
+        //   gc.getLocation(pon, rs => {
+            // var addComp = rs.addressComponents;
+            var sContent = "<h3>" + points[i].name + "</h3>";
+            // sContent +=
+            //   "</br>定位地址：" +
+            //   addComp.province +
+            //   " " +
+            //   addComp.city +
+            //   " " +
+            //   addComp.district;
+            sContent +="</br>定位地址：" +points[i].address;
+            sContent += "</br>定位时间：" + points[i].insert_time;
+            sContent += "</br>速    度：" + points[i].speed + "Km/h";
+            sContent += "</br>方    向：";
+            sContent += "</br>箱内温度：" + points[i].ambient_temp + "°C";
+            sContent += "</br>设定温度：" + points[i].cooler_set_temp + "°C";
+            sContent += "</br>出风温度：" + points[i].out_air_temp + "°C";
+            sContent += "</br>机组模式：" + points[i].zone_status;
+            sContent += "</br>报警代码：" + points[i].zone_alarm_code;
+            sContent += "</br>数据时间：" + points[i].gps_time;
+            var infoWindow = new window.BMap.InfoWindow(sContent, opts);
+
+            var point = new window.BMap.Point(lng, lat);
+            this.map.openInfoWindow(infoWindow, point); //开启信息窗口
+        //   });
+        });
+        this.markers.push(marker);
       }
     },
-    created: function(){
-        
-      },
-      components:{
-          BMap
+
+    remoteMethod(query) {
+      // console.log("query===",query,this.items);
+      if (query !== "") {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.options = this.items.filter(item => {
+            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          });
+        }, 200);
+      } else {
+        this.options = [];
       }
-}
+    }
+  },
+  created: function() {},
+  components: {
+    BMap
+  }
+};
 </script>
 
 <style>
-.el-table th{
-    background:rgb(31, 75, 116) !important;
-    color:#fff;
-    padding:0px 0;
+.el-table th {
+  background: rgb(31, 75, 116) !important;
+  color: #fff;
+  padding: 0px 0;
 }
-.el th{
-    background:none !important;
-    color:black;
+.el th {
+  background: none !important;
+  color: black;
 }
-.el-table .cell{
-    line-height: 14px; 
+.el-table .cell {
+  line-height: 14px;
 }
-.box{
-    width:130px;
-    height: 35px;
-    line-height: 35px;
-    margin-left: -20px;
-    margin-top:-10px;
-    border: 2px solid #005fc6;
-    background-color: #ffffff;
-    border-radius: 5px;
-    font-size: 14px;
-    padding-left: 10px;
-    color:#005fc6;
+.box {
+  width: 130px;
+  height: 35px;
+  line-height: 35px;
+  margin-left: -20px;
+  margin-top: -10px;
+  border: 2px solid #005fc6;
+  background-color: #ffffff;
+  border-radius: 5px;
+  font-size: 14px;
+  padding-left: 10px;
+  color: #005fc6;
 }
-.box:nth-child(2){
-    color:#fff;
-    background-color: rgb(66, 167, 66);
-    border: 2px solid  rgb(66, 167, 66);
+.box:nth-child(2) {
+  color: #fff;
+  background-color: rgb(66, 167, 66);
+  border: 2px solid rgb(66, 167, 66);
 }
-.box:nth-child(3){
-    color:#fff;
-    background-color: rgb(180, 173, 173);
-    border: 2px solid  rgb(180, 173, 173);
+.box:nth-child(3) {
+  color: #fff;
+  background-color: rgb(180, 173, 173);
+  border: 2px solid rgb(180, 173, 173);
 }
-.box:nth-child(4){
-    color:#fff;
-    background-color: rgb(245, 108, 108);
-    border: 2px solid  rgb(245, 108, 108);
+.box:nth-child(4) {
+  color: #fff;
+  background-color: rgb(245, 108, 108);
+  border: 2px solid rgb(245, 108, 108);
 }
-.tab{
-    border-top:2px solid rgb(180, 173, 173);
+.tab {
+  border-top: 2px solid rgb(180, 173, 173);
 }
-.mapstyle{
+.mapstyle {
   float: left;
-  height:68vh;
-  margin-top:20px;
-  margin-left:30px;
-  border:1px solid transparent;
+  height: 68vh;
+  margin-top: 20px;
+  margin-left: 30px;
+  border: 1px solid transparent;
   border-radius: 3px;
-  width:53%;
-  border:1px solid rgb(180, 173, 173);
+  width: 53%;
+  border: 1px solid rgb(180, 173, 173);
 }
 </style>

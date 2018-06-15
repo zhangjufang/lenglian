@@ -41,16 +41,59 @@ export default {
         // 绘制图表
         myChart.setOption({
             title: { text: '冷机数据' },
-            tooltip: {},
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                  type: 'cross'
+              },
+            },
+            toolbox:{
+              feature:{
+                dataZoom: {
+                    yAxisIndex: 'none'
+                },
+                saveAsImage:{}
+              }
+            }, 
+            dataZoom: [
+              {
+                  show: true,
+                  realtime: true,
+                  start: 65,
+                  end: 85
+              },
+              {
+                  type: 'slider',
+                  realtime: true,
+                  start: 65,
+                  end: 85,
+                  buttom: 5
+              }
+          ],
+            legend:{
+              data:[{
+                name: '销量',
+              },
+              {
+                name: '产量',
+              }
+              ]
+            },
             xAxis: {
                 data: ["1","2","3","4","5","6"]
             },
             yAxis: {},
             series: [{
                 name: '销量',
-                type: 'bar',
+                type: 'line',
                 data: [1,2,3,4,5,] 
-            }]
+            },
+            {
+                name: '产量',
+                type: 'line',
+                data: [5,4,3,2,1] 
+            }
+            ]
         });
     }
   
