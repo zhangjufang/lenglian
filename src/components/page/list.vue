@@ -9,25 +9,37 @@
        
     <div class="tab">
       <div>
-        <el-select v-model="value4" filterable placeholder="请输入关键字" style="margin-top:10px;margin-left:10px;">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-select
+          v-model="value"
+          
+          filterable
+          remote
+          @change="test(value)"
+          reserve-keyword
+          placeholder="请输入设备关键词"
+          :remote-method="remoteMethod"
+          :loading="loading" style="margin-left:20px;margin-top:5px;height: 32px;">
+              <el-option
+              v-for="item in options"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name">
           </el-option>
-        </el-select>
-        <el-button type="primary" style="margin-left:10px;">修改</el-button>
+      </el-select>
+       
       </div>
       <template >
-        <el-table :data="tableData" border style="width: 96%;margin-top:10px;margin-left:10px;font-size:14px;" height="500" class="el" :default-sort = "{prop: 'date', order: 'descending'}">
+        <el-table :data="tableData3" border style="width: 96%;margin-top:10px;margin-left:10px;font-size:14px;" height="75vh" class="form" :default-sort = "{prop: 'date', order: 'descending'}">
           <el-table-column type="selection" width="45"></el-table-column>
-          <el-table-column prop="date" label="名称" width="150" ></el-table-column>
-          <el-table-column prop="name" label="分组" width="130" ></el-table-column>
-          <el-table-column prop="name" label="DTU类别" width="130" ></el-table-column>
-          <el-table-column prop="name" label="DTU编码" width="130"></el-table-column>
-          <el-table-column prop="name" label="冷机类型" width="130"></el-table-column>
-          <el-table-column prop="name" label="冷机编码" width="130" ></el-table-column>
-          <el-table-column prop="name" label="温度传感器" width="130" ></el-table-column>
-          <el-table-column prop="name" label="湿度传感器" width="130"></el-table-column>
-          <el-table-column prop="name" label="门开关" width="130"></el-table-column>
-          <el-table-column prop="name" label="新风系统" width="130" ></el-table-column>
+          <el-table-column prop="flag_stop" label="状态" width="60"></el-table-column>
+          <el-table-column prop="name" label="名称" width="150" ></el-table-column>
+
+          <el-table-column prop="box_category" label="DTU类别" width="180" ></el-table-column>
+          <el-table-column prop="box_id" label="DTU编码" width="180"></el-table-column>
+          <el-table-column prop="ibox_version" label="冷机版本" width="130"></el-table-column>
+          <el-table-column prop="cooler_code" label="冷机编码" width="130" ></el-table-column>
+          <el-table-column prop="clientName" label="客户"></el-table-column>
+          
         </el-table>
       </template>
     </div>
@@ -35,20 +47,60 @@
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-      tableData:[{
-        data:'CICU8119522',
-        name:'auto',
-      }]
+import BMap from '../common/BMap';
+    export default {
+        data() {
+            return {
+            options: [],
+            value: [],
+            list: [],
+            loading: false, 
+            items:[],
+            tableData3:[],
+            points:[],
+            states:[],
+            map:null,
+           
+        }
+    },
+   mounted () {
+        this.getstates();
+      this.list = this.states.map(item => {
+        return { value: item, label: item};
+      });
+    },
+    methods: {
+        test(value){
+            this.tableData3 = this.items.filter((item)=>{
+                return value.indexOf(item.name)>-1;
+            });
+        },
+      //搜索框
+      getstates() {
+        this.$axios.post('/api/d/container_list_json',this.qs.stringify({})).then((data) =>{
+        //    console.log(data)
+            this.items=data.data.result;
+            this.tableData3=data.data.result;
+        });
+      },    
+      remoteMethod(query) {
+        // console.log("query===",query,this.items);
+        if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.options = this.items.filter(item => {
+              return item.name.toLowerCase()
+                .indexOf(query.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.options = [];
+        }
+      }
     }
-  }
 }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .lead{
@@ -57,7 +109,7 @@ export default {
 }
 .tab{
   width: 100%;
-  height:75vh;
+  height:85vh;
   background-color: #fff;
   border-radius: 6px; 
   position:absolute;

@@ -9,7 +9,7 @@
             <div>
                 <el-select
                     v-model="value"
-                    
+
                     filterable
                     remote
                     @change="test(value)"
@@ -25,11 +25,11 @@
                     </el-option>
                 </el-select>
             </div>
-            <div class="he" style="width:700px;height:30px;display: flex;justify-content: space-between;margin-right:2%;">
-                <div class="box" >全部集装箱&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{items.length}}&nbsp;&nbsp;个</div>
-                <div class="box">在线</div>
-                <div class="box">离线</div>
-                <div class="box">报警</div>
+            <div class="he" style="width:600px;height:30px;display: flex;justify-content: space-between;margin-right:2%;">
+                <div class="box" >全部集装箱:&nbsp;&nbsp;&nbsp;&nbsp;{{items.length}}个</div>
+                <div class="box">在线:</div>
+                <div class="box">离线:</div>
+                <div class="box">报警:</div>
             </div> 
         </div>
         <div class="tab" style="display: flex;justify-content: space-between;width:100%;">
@@ -37,12 +37,14 @@
                 <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" class="el" height="68vh"  :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="100" sortable></el-table-column>
                     <el-table-column prop="ambient_temp" label="箱内温度°C" width="108" sortable></el-table-column>
-                    <!-- <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column> -->
+                    <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
                     <el-table-column prop="zone_status" label="机组状态" width="120"></el-table-column>
-                    <el-table-column prop="cooler_set_temp" label="设定温度°C" width="100"></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
+                    <!-- <el-table-column prop="cooler_set_temp" label="设定温度°C" width="100"></el-table-column> -->
+
                     <!-- <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
                     <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column> -->
-                    <el-table-column prop="ambient_temp" label="环境温度°C" width="84"></el-table-column>
+                    <!-- <el-table-column prop="ambient_temp" label="环境温度°C" width="84"></el-table-column> -->
                     <el-table-column prop="insert_time" label="更新时间" ></el-table-column>
                 </el-table>
             </template>
@@ -85,39 +87,17 @@ import BMap from '../common/BMap';
             loading: false, 
             items:[],
             tableData3:[],
-            points:[
-                // {"longitude":116,"latitude":40,"id":50,"name":"p1"},  
-                // {"longitude":117,"latitude":31,"id":2,"name":"p2"},  
-                // {"longitude":116,"latitude":34,"id":3,"name":"p3"} 
-            ],
+            points:[],
             states:[],
-            // markerArr:[]
-            // nameArray :[],
-            // labelArray : [],
-            // contentArray:[],
-            // infoWindowArray:[],
-            // markerArray:[],
-            // index_lnglat:{},
-            // longitudeArray:[],
-            // latitudeArray:[],
-            // timeArray:[],
-            // gpsTimeArray:[],
-            // speedArray:[],
-            // gpsTemp1:[],
-            // gpsTemp2:[],
-            // gpsTemp3:[],
-            // gpsTemp4:[],
-            // coolerStatus:[],
-            // doorStatus:[],
-            map:null
+            map:null,
         }
     },
    mounted () {
         this.getstates();
-        // this.initMap();
+        // this.infoWindow();
         this.getlist();
-      this.list = this.states.map(item => {
-        return { value: item, label: item };
+        this.list = this.states.map(item => {
+        return { value: item, label: item};
       });
     },
     methods: {
@@ -139,66 +119,57 @@ import BMap from '../common/BMap';
       //设备列表
       getlist() {
         this.$axios.post('/api/d/container_latest_json',this.qs.stringify({})).then((data) =>{
-        //    console.log(data)
             this.items=data.data.result;
             this.tableData3=data.data.result;
-            // this.points=data.data.result;
-            // console.log(this.points)
             this.addMarker(data.data.result);
+        
+            // var conNum_total = 0;
+            // var conNum_online = 0;
+            // var conNum_offline = 0;
+            // var conNum_alarm = 0;
+            // var nowTime = new Date().getTime();
+            // nowTime = nowTime/1000 - 1200;
+            // for(var i = 0;i<this.items.length;i++ ){
+            //     conNum_total++;
+            //     if(this.items[i].insert_time > nowTime){
+            //         conNum_online ++;
+            //     }else{
+            //         conNum_offline++;
+            //     }
+            // }
         });
       }, 
-      //创建地图
-        // initMap() {  
-        //     var map = new BMap.Map("dituContent"); // 创建Map实例  
-        //     this.map = map;
-        //     var point = new BMap.Point(96.404, 35.917); //地图中心点
-        //     map.centerAndZoom(point, 5); // 初始化地图,设置中心点坐标和地图级别。  
-        //     map.enableScrollWheelZoom(true); //启用滚轮放大缩小  
-        //     var marker = new BMap.Marker(point);//创建标注
-        //     // map.addOverlay(marker);//方法addOverlay() 向地图中添加覆盖物
-        //     map.addControl(new BMap.OverviewMapControl({isOpen:true,anchor:BMAP_ANCHOR_BOTTOM_RIGHT}));
-        //     //向地图中添加缩放控件  
-        //     var ctrlNav = new window.BMap.NavigationControl({  
-        //         anchor: BMAP_ANCHOR_TOP_LEFT,  
-        //         type: BMAP_NAVIGATION_CONTROL_LARGE  
-        //     });  
-        //     map.addControl(ctrlNav);  
-        //     //向地图中添加缩略图控件  
-        //     var ctrlOve = new window.BMap.OverviewMapControl({  
-        //         anchor: BMAP_ANCHOR_BOTTOM_RIGHT,  
-        //         isOpen: 1  
-        //     });  
-        //     map.addControl(ctrlOve);  
-        //     //向地图中添加比例尺控件  
-        //     var ctrlSca = new window.BMap.ScaleControl({  
-        //         anchor: BMAP_ANCHOR_BOTTOM_LEFT  
-        //     }); 
-        // },
     addMarker(points){  // 创建图标对象     
     // console.log(BMap,BMap.point);   
         for(var i = 0;i <points.length;i++){  
             var point = new window.BMap.Point(points[i].longitude,points[i].latitude);      
-            var  marker = new window.BMap.Marker(point);     
-            this.map.addOverlay(marker);   
-            // 给标注点添加点击事件。使用立即执行函数和闭包  
-            // (function() {  
-            //     var thePoint = points[i];  
-            //     marker.addEventListener("click",function(){  
-            //         makeInfoWindow(this,thePoint);  
-            //     });  
-            // })();  
-            }
+            var  marker = new window.BMap.Marker(point);    
+            this.map.addOverlay(marker);
+             var opts = {    
+                width : 50,     // 信息窗口宽度    
+                height: 280,     // 信息窗口高度    
+                }  ;
+             var sContent ='<h3>'+points[i].name+'</h3>' ;
+                sContent+='</br>定位地址：';
+                sContent+='</br>定位时间：'+points[i].insert_time;
+                sContent+='</br>速    度：'+points[i].speed+'Km/h';
+                sContent+='</br>方    向：';
+                sContent+='</br>箱内温度：'+points[i].ambient_temp+'°C';
+                sContent+='</br>设定温度：'+points[i].cooler_set_temp+'°C';
+                sContent+='</br>出风温度：'+points[i].out_air_temp+'°C';
+                sContent+='</br>机组模式：'+points[i].zone_status
+                sContent+='</br>报警代码：'+points[i].zone_alarm_code;
+                sContent+='</br>数据时间：'+points[i].gps_time;
+                var infoWindow = new window.BMap.InfoWindow(sContent,opts); 
+            marker.addEventListener("click", function(e){  
+                //获取点的信息
+                this.map.openInfoWindow(infoWindow,point); //开启信息窗口
+            });
+            i++;
+        }
      },
-    //    makeInfoWindow(thisMaker,point){  
-    //         var Content =  
-    //         '<ul style="margin:0 0 5px 0;padding:0.2em 0">'  
-    //         +'<li style="line-height: 26px;font-size: 15px;">'  
-    //         +'<span style="width: 50px;display: inline-block;">id：</span>' + point.id + '</li>'  
-    //         +'<li style="line-height: 26px;font-size: 15px;">'  
-    //         +'<span style="width: 50px;display: inline-block;">名称：</span>' + point.name + '</li>'    
-    //         var infoWindow = new BMap.InfoWindow(Content);  // 创建信息窗口对象  
-    //         thisMaker.openInfoWindow(infoWindow);  
-    //     },
+    
+        
       remoteMethod(query) {
         // console.log("query===",query,this.items);
         if (query !== '') {
@@ -238,7 +209,7 @@ import BMap from '../common/BMap';
     line-height: 14px; 
 }
 .box{
-    width:160px;
+    width:130px;
     height: 35px;
     line-height: 35px;
     margin-left: -20px;

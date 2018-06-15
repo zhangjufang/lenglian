@@ -2,6 +2,7 @@
     <div class="header">
         <div class="logo"><img src="../images/irlogo.png"> </div>
         <div class = "logo" style="margin-left:-150px;">集装箱物联网平台</div>
+        <div class ="bg"><img src="../images/bg2.jpg"></div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -188,15 +189,21 @@
     
     .header .logo{
         float: left;
-        width:250px;
+        width:240px;
         line-height: 70px;
     }
-    img{
+    .logo img{
         width:60px;
         margin-top:10px;
         margin-left: 20px;
     }
-    
+    .bg img{
+        float: left;
+        width:63%;
+        height:70px;
+        /* margin-top:10px; */
+        /* margin-left: 20px; */
+    }
     .header-right{
         float: right;
         padding-right: 50px;
@@ -205,11 +212,13 @@
         display: flex;
         height: 70px;
         align-items: center;
+        /* width:50%; */
     }
     .btn-fullscreen{
         transform: rotate(45deg);
         margin-right: 5px;
         font-size: 24px;
+        
     }
     .btn-bell, .btn-fullscreen{
         position: relative;
@@ -218,6 +227,7 @@
         text-align: center;
         border-radius: 15px;
         cursor: pointer;
+        margin-left: 10px;
     }
     .btn-bell-badge{
         position: absolute;
@@ -233,7 +243,7 @@
         color: #fff;
     }
     .user-name{
-        margin-left: 10px;
+        margin-left: 20px;
     }
     .user-avator{
         margin-left: 20px;

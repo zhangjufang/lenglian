@@ -3,9 +3,8 @@
 		// $(function(){
 		// 	//定时刷新标记
 		// 	//map 区域大小
-		// 		// map_resize();
-		// 		// $(window).resize(function(){map_resize();});
-
+		// 		map_resize();
+		// 		$(window).resize(function(){map_resize();});
 		// 	//定时刷新点
 		// 		setInterval(function(){
 		// 			if(refresh_flag==1){
