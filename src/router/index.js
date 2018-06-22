@@ -21,11 +21,11 @@ export default new Router({
                     component: resolve => require(['../components/page/index.vue'], resolve),
                     meta: { title: '首页' }
                 },
-                {
-                    path: '/chest',
-                    component: resolve => require(['../components/page/chest.vue'], resolve),
-                    meta: { title: '轨迹' }
-                },
+                // {
+                //     path: '/chest',
+                //     component: resolve => require(['../components/page/chest.vue'], resolve),
+                //     meta: { title: '轨迹' }
+                // },
                 {
                     path: '/list',
                     component: resolve => require(['../components/page/list.vue'], resolve),
@@ -68,7 +68,7 @@ export default new Router({
                 },
                 {
                     path: '/form',
-                    component: resolve => require(['../components/page/BaseForm.vue'], resolve),
+                    component: resolve => require(['../components/page/form.vue'], resolve),
                     meta: { title: '实时' }
                 },
                 {

@@ -1,8 +1,8 @@
 <template>
     <div class="header">
         <div class="logo"><img src="../images/irlogo.png"> </div>
-        <div class = "logo" style="margin-left:-150px;">集装箱物联网平台</div>
-        <div class ="bg"><img src="../images/bg2.jpg"></div>
+        <div class = "lo" style="margin-left:-150px;">{{$t('Header.tittle')}}</div>
+        <!-- <div class ="bg"><img src="../images/bg2.jpg"></div> -->
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -28,41 +28,70 @@
                         {{username}} <i class="el-icon-caret-bottom"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <a href="#" target="_blank">
-                            <el-dropdown-item>个人资料</el-dropdown-item>
-                        </a>
-                        <a href="#" target="_blank" >
-                            <el-dropdown-item>修改密码</el-dropdown-item>
-                        </a>
-                        <el-dropdown-item divided  command="loginout">退出登录</el-dropdown-item>
+                        <div  @click="per"><el-dropdown-item > {{$t('Header.per')}} </el-dropdown-item></div>
+                        <div @click="changes"><el-dropdown-item>{{$t('Header.change')}}</el-dropdown-item></div>    
+                        <el-dropdown-item divided  command="loginout">{{$t('Header.logo')}}</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <!-- 密码修改框框 -->
-		<!-- <el-dialog title="_修改密码_" :visible.sync="editpass" size="init">
-			<el-form :model="form">
-			<el-form :model="passwordData" :rules="passwordRules" ref="passwordData">
-				<el-row>
-					<el-form-item label="_原密码_" prop="oldPass"  label-width="100px">
-						<el-input v-model="passwordData.oldPass" type='password' placeholder="_请输入密码_"></el-input>
-					</el-form-item>
-				</el-row>
-				<el-row>
-					<el-form-item label="_新密码_" prop="newPass" label-width="100px">
-						<el-input v-model="passwordData.newPass" type='password'  placeholder="_请输入密码_"></el-input>
-					</el-form-item>
-				</el-row>
-				<el-row>
-					<el-form-item label="_确认密码_" prop="checkPass" label-width="100px">
-						<el-input v-model="passwordData.checkPass" type='password'  placeholder="_请输入密码_"></el-input>
-					</el-form-item>
-				</el-row>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button type="warning" @click="editpass=false">_取消_</el-button>
-				<el-button type="primary" @click="savePassword">_确定_</el-button>
-			</div>
-		</el-dialog> -->
+                <div class="chan" v-show="change">
+                    <!-- 密码修改框框 -->
+                    <div class="changes"> <p style="padding-left:10px;padding-top:10px;font-size:18px;">用户密码修改</p> 
+                    <el-button style="float:right;margin-right:20px;padding:5px 6px;margin-top:-20px;" @click="toggle">关闭</el-button> </div>
+                    <div class="users">
+                        <b>登录名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;{{username}} </b> <br>
+                        <b>姓名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{username}} </b> <br>
+                        <b>密码：<el-input
+                    placeholder="用户密码"  style="width:300px;margin-left:65px;"
+                    v-model="input10"
+                    clearable>
+                    </el-input></b> <br>
+                    <b>重复录入：<el-input
+                    placeholder="重复录入用户密码"  style="width:300px;margin-left:30px;"
+                    v-model="input10"
+                    clearable>
+                    </el-input></b> <br>
+                    <el-button type="primary" style="margin-left:100px;">保存</el-button>
+                    <el-button type="danger" style="margin-left:100px;">重置</el-button>
+                    </div>
+
+                </div>
+                
             </div>
+        </div>
+        <div class="user" v-show="user"> 
+            <!-- 个人资料 -->
+            <div class="changes"> <p style="padding-left:10px;padding-top:10px;font-size:18px;">用户信息修改</p> 
+             <el-button style="float:right;margin-right:20px;padding:5px 6px;margin-top:-20px;" @click="toggle">关闭</el-button> </div>
+           <div class="users">
+                <b>登录名：&nbsp;&nbsp; {{username}} </b> <br>
+                <b>姓名：<el-input
+                    placeholder="请输入姓名"  style="width:300px;margin-left:30px;"
+                    v-model="input10"
+                    clearable>
+                    </el-input></b> <br>
+                <b>电话：<el-input
+                    placeholder="电话"  style="width:300px;margin-left:30px;"
+                    v-model="input10"
+                    clearable>
+                    </el-input></b> <br>
+                <b>Email：<el-input
+                    placeholder="Email"  style="width:300px;margin-left:20px;"
+                    v-model="input10"
+                    clearable>
+                    </el-input></b><br>
+                <b>性别：
+                        <el-select v-model="value" slot="prepend" placeholder="请选择" style="z-index:9999;margin-left:30px;width:300px;">
+                        <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select></b> <br>
+                <el-button type="primary" style="margin-left:100px;">保存</el-button>
+                <el-button type="danger" style="margin-left:100px;">重置</el-button>
+            </div> 
+            
         </div>
     </div>
 </template>
@@ -75,7 +104,18 @@
                 fullscreen: false,
                 // editpass:false,
                 // name: 'jufang',
-                message: 2
+                message: 2,
+                input10:'',
+                 options: [{
+                    value: '选项1',
+                    label: '男'
+                    }, {
+                    value: '选项2',
+                    label: '女'
+                    }],
+                value: '',
+                user:false,
+                change:false,
             }
         },
         computed:{
@@ -124,6 +164,23 @@
                 }
                 this.fullscreen = !this.fullscreen;
             },
+            per(){
+            this.user=true
+            this.change=false
+            },
+            changes(){
+            this.user=false
+            this.change=true
+            },
+            toggle(){
+                this.user=false
+                this.change=false
+            },
+             lancheck(lan){
+            console.log(lan);
+            this.$i18n.locale=lan;
+            },
+            
             // //保存密码
 			// savePassword(){
 
@@ -189,8 +246,13 @@
     
     .header .logo{
         float: left;
-        width:240px;
+        width:120px;
         line-height: 70px;
+    }
+    .lo{
+        position:fixed;
+        padding-top:20px;
+        padding-left:250px;
     }
     .logo img{
         width:60px;
@@ -260,5 +322,42 @@
     }
     .el-dropdown-menu__item{
         text-align: center;
+    }
+    .user{
+        position: fixed;
+        z-index:999;
+        width:45%;
+        border:1px solid gray;
+        height:65vh;
+        margin-top:10%;
+        margin-left:30%;
+        background-color:#fff;        
+        border-radius: 8px;
+    }
+    .changes{
+        width:100%;
+        height:50px;
+        background-color:rgb(0,52,102)
+    }
+    .users{
+        margin-top:50px;
+        margin-left:150px;
+    }
+    .users b{
+        font-size:18px;
+        display:block;
+        color:black;
+        margin-top:20px;
+    }
+    .chan{
+        position: fixed;
+        z-index:999;
+        width:45%;
+        border:1px solid gray;
+        height:60vh;
+        margin-top:24%;
+        margin-left:-59%;
+        background-color:#fff;        
+        border-radius: 8px;
     }
 </style>

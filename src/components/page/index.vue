@@ -3,7 +3,7 @@
         <div style="display: flex;justify-content: space-between;">
             <div class="crumbs" style="width:100px;" >
                 <el-breadcrumb separator="/">
-                    <el-breadcrumb-item> 集装箱列表</el-breadcrumb-item>
+                    <el-breadcrumb-item> {{$t('index.list')}}</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
             <div>
@@ -16,7 +16,7 @@
                     reserve-keyword
                     placeholder="请输入设备关键词"
                     :remote-method="remoteMethod"
-                    :loading="loading" style="margin-top:-5px;margin-left:-80%;height: 32px;">
+                    :loading="loading" style="margin-top:-5px;margin-left:-90%;height: 32px;">
                         <el-option
                         v-for="item in options"
                         :key="item.name"
@@ -26,15 +26,16 @@
                 </el-select>
             </div>
             <div class="he" style="width:600px;height:30px;display: flex;justify-content: space-between;margin-right:2%;">
-                <div class="box" >全部集装箱:&nbsp;&nbsp;&nbsp;&nbsp;{{items.length}}个</div>
-                <div class="box">在线:</div>
-                <div class="box">离线:</div>
-                <div class="box">报警:</div>
+                <div class="box" >{{$t('index.full')}}:&nbsp;&nbsp;&nbsp;&nbsp;{{items.length}}个</div>
+                <div class="box">{{$t('index.on')}}:</div>
+                <div class="box">{{$t('index.off')}}:</div>
+                <div class="box">{{$t('index.alarm')}}:</div>
             </div> 
         </div>
         <div class="tab" style="display: flex;justify-content: space-between;width:100%;">
             <template>
-                <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" class="el" height="68vh"  :default-sort = "{prop: 'date', order: 'descending'}">
+                <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" 
+                class="el" height="68vh"  @row-click="openalert()" :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="100" sortable></el-table-column>
                     <el-table-column prop="ambient_temp" label="箱内温度°C" width="108" sortable></el-table-column>
                     <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
@@ -52,7 +53,7 @@
         </div>
         <div class="grid">
             <template >
-                <el-table :data="tableData3" border style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);"  height="9vh"  :default-sort = "{prop: 'date', order: 'descending'}">
+                <el-table :data="tableData3" border style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);" class="table2"  height="9vh"  :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="105" sortable ></el-table-column>
                     <el-table-column prop="ambient_temp" label="箱内温度°C" width="108" sortable></el-table-column>
                     <el-table-column prop="gps_humi" label="箱内湿度%" width="108" sortable></el-table-column>
@@ -72,7 +73,117 @@
                 </el-table>
             </template>
         </div>
+        <div class="alert-tab"  v-show="look" ref="main">
+          <div style=" z-index:999;margin-left:50px;margin-top:20px;">
+            <span>箱体编号：</span><span>DTU编号：</span>
+            <el-button style="float:right;margin-right:20px;padding:5px 6px;" @click="togglePanel">关闭</el-button>
+          </div>
+            <div class="tittl" style="font-size:18px;">
+                <p @click="servicePro">冷机</p>
+                <p @click="tencent">传感器</p>
+                <p @click="zizhi">控制</p>
+            </div>
+            <div class="lengji" v-show="servicePro1">
+                    <div class="lengji1" >
+                        <span>冷机通讯：</span> <br>
+                        <span>冷机电压（V）：</span><br>
+                        <span>环境温度(°C)：</span> <br> 
+                        <span>环境温度(°C)：</span> <br>
+                        <span>环境温度(°C)：</span> <br>
+                        <span>出风温度(°C)：</span> <br>
+                        <span>蒸发器盘管温度(°C):</span> <br>
+                    </div>
+                     <div class="lengji1" >
+                        <span>状态信息有效：</span> <br>
+                        <span>软件版本：</span> <br>
+                        <span>备电运行时间(h)：</span> <br>
+                        <span>总工作时间(h)：</span> <br>
+                        <span>引擎工作时间(h)：</span> <br>
+                        <span>告警码：</span> <br>
+                    </div>
+             
+            </div>
+              <div class="lengji" v-show="tencent1">
+                <div class="lengji1" >
+                        <span>湿度(%)：</span> <br>
+                        <span>温度1(°C)：</span><br>
+                        <span>温度2(°C)：</span> <br> 
+                        <span>温度3(°C)：</span> <br>
+                        <span>平均温度(°C)：</span> <br>
+                        <span>CO2(ppm)：</span> <br>
+                        <span>蒸发器盘管温度(°C):</span> <br>
+                    </div>
+                     <div class="lengji1" >
+                        <span>电压(V)：</span> <br>
+                        <span>油位(%)：</span> <br>
+                        <span>速度(Km/h)：</span> <br>
+                        <span>方向(度)：</span> <br>
+                        <span>经纬度：</span> <br>
+                        <span>门状态：</span> <br>
+                    </div>
+             
+            
+            </div>
+            <div class="kongzhi" v-show="zizhi1">
+                <div class="kongzhi">
+                  <b  style="float:left;">机组开关:</b>
+                  <span style="margin-left:70px;">
+                    <el-button type="primary">开启机组</el-button>
+                    <el-button type="danger">关闭机组</el-button>
+                  </span>
+                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：      时间：</div>
+                </div>
+                <div class="kongzhi1">
+                  <b  style="float:left;">设置温度(°C)：</b>
+                  <span style="margin-left:30px;">
+                  <el-input v-model="input" style="width:120px" placeholder="请输入内容"></el-input>
+                    <el-button type="primary">设置</el-button>
+                  </span>
+                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：      时间：</div>
+                </div>
+                <div class="kongzhi1">
+                  <b  style="float:left;">清除报警：</b>
+                  <span style="margin-left:60px;">
+                  
+                    <el-button type="primary">清除报警</el-button>
+                  </span>
+                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：清除报警      时间：</div>
+                </div>
+                <div class="kongzhi1">
+                  <b  style="float:left;">除霜：</b>
+                  <span style="margin-left:93px;">
+                  
+                    <el-button type="primary">初始化除霜</el-button>
+                  </span>
+                </div>
+                <div class="kongzhi1">
+                  <b  style="float:left;">工作模式：</b>
+                  <span style="margin-left:60px;">
+                  <el-button >连续模式</el-button>
+                    <el-button type="primary">循环模式</el-button>
+                  </span>
+                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：设置cs模式为      时间：</div>
+                </div>
+                <div class="kongzhi1">
+                  <b  style="float:left;">新风门开关：</b>
+                  <span style="margin-left:45px;">
+                  <el-select v-model="value1" placeholder="请选择" style="width:120px;z-index:999999">
+                      <el-option
+                        v-for="index in option"
+                        :key="index.value1"
+                        :label="index.label"
+                        :value="index.value">
+                      </el-option>
+                    </el-select>
+
+                    <el-button type="primary">设置新风</el-button>
+                     <el-button type="danger">关闭新风</el-button>
+                  </span>
+                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：     时间：</div>
+                </div>
+          </div>
     </div>
+  </div>
 </template>
 
 
@@ -82,6 +193,26 @@ import lnglatCon from "../common/lnglat-convertor.js";
 export default {
   data() {
     return {
+      option: [{
+          value: '选项1',
+          label: '关闭新风'
+        }, {
+          value: '选项2',
+          label: '20%开启'
+        }, {
+          value: '选项3',
+          label: '40%开启'
+        }, {
+          value: '选项4',
+          label: '60%开启'
+        }, {
+          value: '选项5',
+          label: '80%开启'
+        }, {
+          value: '选项4',
+          label: '100%开启'
+        }],
+      value1: '',
       options: [],
       value: [],
       list: [],
@@ -91,7 +222,12 @@ export default {
       points: [],
       states: [],
       map: null,
-      markers:[]
+      markers:[],
+      servicePro1: true,
+      tencent1: false,
+      zizhi1: false,
+      input:'',
+      look:false
     };
   },
   mounted() {
@@ -108,7 +244,6 @@ export default {
     },
     test(value) {
       this.tableData3 = this.items.filter((item,index) => {
-
         if(value.indexOf(item.name) > -1){
             // console.log(this.markers,this.markers[index]);
             this.markers[index].V.click();
@@ -123,7 +258,7 @@ export default {
       this.$axios
         .post("/api/d/container_list_json", this.qs.stringify({}))
         .then(data => {
-          //    console.log(data)
+            //  console.log(data)
           this.items = data.data.result;
         });
     },
@@ -132,7 +267,7 @@ export default {
       this.$axios
         .post("/api/d/container_latest_json", this.qs.stringify({}))
         .then(data => {
-        //   console.log(data.data.result);
+          // console.log(data.data.result);
           var result = data.data.result.map((item,i) => {
             /**
              * 各种-999转换为-
@@ -143,10 +278,20 @@ export default {
                 if (item[key] == "0") {
                   item[key] = "不明状态";
                 }
-              } else {
-                if (item[key] == "-999") {
+              } if(item[key] == "-999"||item[key] == "-99") {
                   item[key] = "-";
-                }
+              }if(key == "cooler_voltage"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/100;
+                } 
+              }if(key == "ambient_temp"){
+                var key = "gps_temp1"+"gps_temp2"+"gps_temp3";
+                item[key] =  item[key]/30;
+              }if(key == "gps_voltage"){
+               
+                item[key] =  item[key]/10;
+              }else{
+                return;
               }
             });
             /**
@@ -167,15 +312,22 @@ export default {
             gc.getLocation(point, (rs)=>{
               var addComp = rs.addressComponents;
                 this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district);
-                // item.address = addComp.province + " " + addComp.city + " " + addComp.district;
+                // item.address = addComp.province + " " + addComp.city + " " + addComp.district;]
+                
             });
+             /**
+             * 温度平均值
+             */
+            // var temp = "gps_temp1"+"gps_temp2"+"gps_temp3";
+            // var average = temp/30;
+            // this.$set(this.tableData3[i],'average');
             return item;
+            
           });
             // console.log('result==',result);
           this.items = result;
           this.tableData3 = result;
           this.addMarker(result);
-
           // var conNum_total = 0;
           // var conNum_online = 0;
           // var conNum_offline = 0;
@@ -206,7 +358,6 @@ export default {
           width: 50, // 信息窗口宽度
           height: 280 // 信息窗口高度
         };
-
         marker.addEventListener("click", function(e) {
           //获取点的信息
         //   console.log(marker,e.target);
@@ -236,7 +387,6 @@ export default {
             sContent += "</br>报警代码：" + points[i].zone_alarm_code;
             sContent += "</br>数据时间：" + points[i].gps_time;
             var infoWindow = new window.BMap.InfoWindow(sContent, opts);
-
             var point = new window.BMap.Point(lng, lat);
             this.map.openInfoWindow(infoWindow, point); //开启信息窗口
         //   });
@@ -244,7 +394,6 @@ export default {
         this.markers.push(marker);
       }
     },
-
     remoteMethod(query) {
       // console.log("query===",query,this.items);
       if (query !== "") {
@@ -258,7 +407,28 @@ export default {
       } else {
         this.options = [];
       }
-    }
+    },
+    servicePro: function() {
+            this.servicePro1 = true;
+            this.tencent1 = false;
+            this.zizhi1 = false;
+        },
+            tencent: function() {
+            this.servicePro1 = false;
+            this.tencent1 = true;
+            this.zizhi1 = false;
+        },
+            zizhi: function() {
+            this.servicePro1 = false;
+            this.tencent1 = false;
+            this.zizhi1 = true;
+        },
+        togglePanel () {
+            this.look = false;
+        },
+        openalert(){
+          this.look = true;
+        }
   },
   created: function() {},
   components: {
@@ -268,14 +438,14 @@ export default {
 </script>
 
 <style>
-.el-table th {
-  background: rgb(31, 75, 116) !important;
+.table2 th {
+  background: rgb(31, 75, 116) ;
   color: #fff;
   padding: 0px 0;
 }
-.el th {
-  background: none !important;
-  color: black;
+.el th{
+ background: none !important;
+ color:black;
 }
 .el-table .cell {
   line-height: 14px;
@@ -320,5 +490,47 @@ export default {
   border-radius: 3px;
   width: 53%;
   border: 1px solid rgb(180, 173, 173);
+}
+.alert-tab{
+  position: fixed;
+  z-index:9999;
+  width:50%;
+  border:1px solid gray;
+  height:65vh;
+  margin-top:-40%;
+  margin-left:20%;
+  background-color:#fff;
+  border-radius: 8px;
+}
+.alert-tab p{
+    float:left;
+    margin-left:50px;
+    margin-top:20px;
+    color:rgb(83, 163, 233);
+}
+.alert-tab p:hover{
+    color:black;
+}
+.lengji{
+    display: flex;
+    justify-content: space-between;
+    margin-top:60px;
+}
+.lengji span{
+    display: flex;
+    justify-content: space-between;
+    margin-top:12px;
+    margin-left:50px;
+}
+.lengji1 {
+    width:400px;
+}
+.kongzhi{
+   margin-top:70px;
+   margin-left:30px;
+}
+.kongzhi1{
+  margin-top:15px;
+  margin-left:30px;
 }
 </style>

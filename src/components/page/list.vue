@@ -33,7 +33,6 @@
           <el-table-column type="selection" width="45"></el-table-column>
           <el-table-column prop="flag_stop" label="状态" width="60"></el-table-column>
           <el-table-column prop="name" label="名称" width="150" ></el-table-column>
-
           <el-table-column prop="box_category" label="DTU类别" width="180" ></el-table-column>
           <el-table-column prop="box_id" label="DTU编码" width="180"></el-table-column>
           <el-table-column prop="ibox_version" label="冷机版本" width="130"></el-table-column>
@@ -77,10 +76,40 @@ import BMap from '../common/BMap';
         },
       //搜索框
       getstates() {
-        this.$axios.post('/api/d/container_list_json',this.qs.stringify({})).then((data) =>{
-        //    console.log(data)
-            this.items=data.data.result;
-            this.tableData3=data.data.result;
+        this.$axios.post('/api/d/container_list_json',this.qs.stringify({}))
+        .then(data => {
+          // console.log(data.data.result);
+          var result = data.data.result.map((item,i) => {
+            /**
+             * 各种-999转换为-
+             */
+            Object.keys(item).forEach(key => {
+              if (key == "flag_stop") {
+                //机组状态值处理
+                if (item[key] == "0") {
+                  item[key] = "启用";
+                }if(item[key] == "1"){
+                item[key] = "停用";
+              } 
+              }if(key == "box_category"){
+                 if (item[key] == "1") {
+                  item[key] = "接主机可控制";
+                }if(item[key] == "2"){
+                item[key] = "接主机不控制";
+              }if(item[key] == "3"){
+                item[key] = "不接主机";
+              } 
+              }
+            });
+           
+             
+            return item;
+            
+          });
+        
+          this.items = result;
+          this.tableData3 = result;
+          
         });
       },    
       remoteMethod(query) {
@@ -114,4 +143,5 @@ import BMap from '../common/BMap';
   border-radius: 6px; 
   position:absolute;
 }
+
 </style>

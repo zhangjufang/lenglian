@@ -1,24 +1,56 @@
 <template>
     <div class="sidebar">
         <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="rgb(0,52,102)"
-            text-color="#fff" active-text-color="#20a0ff" unique-opened router>
-            <template v-for="item in items" >
-                <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
-                        <template slot="title">
-                            <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
-                        </template>
-                        <el-menu-item v-for="(subItem,i) in item.subs" :key="i" :index="subItem.index">
-                            {{ subItem.title }}
-                        </el-menu-item>
-                    </el-submenu>
+            text-color="#fff" active-text-color="#20a0ff"  unique-opened router>
+            <el-menu-item index="index">
+               <i class="el-icon-menu"></i>
+                <span slot="title">{{$t('Sidebar.home')}}</span>
+            </el-menu-item>
+            <el-submenu>
+                <template slot="title">
+                   <i class="el-icon-rank"></i>
+                    <span slot="title">{{$t('Sidebar.frige')}}</span>
                 </template>
-                <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
-                        <i :class="item.icon"></i><span slot="title">{{ item.title }}</span>
-                    </el-menu-item>
+                <el-menu-item index="list">{{$t('Sidebar.list')}}</el-menu-item>
+                <el-menu-item index="group">{{$t('Sidebar.group')}}</el-menu-item>
+            </el-submenu>
+            <el-menu-item index="location">
+                <i class="el-icon-location"></i>
+                <span slot="title">{{$t('Sidebar.location')}}</span>
+            </el-menu-item>
+            <el-submenu>
+                <template slot="title">
+                   <i class="el-icon-view"></i>
+                    <span slot="title">{{$t('Sidebar.moni')}}</span>
                 </template>
-            </template>
+                <el-menu-item index="Tabs">{{$t('Sidebar.box')}}</el-menu-item>
+                <el-menu-item index="refirgerator">{{$t('Sidebar.refrigerator')}}</el-menu-item>
+                <el-menu-item index="door">{{$t('Sidebar.door')}}</el-menu-item>
+                <el-menu-item index="trend">{{$t('Sidebar.trend')}}</el-menu-item>
+                <el-menu-item index="duration">{{$t('Sidebar.duration')}}</el-menu-item>
+
+            </el-submenu>
+           <el-menu-item index="form">
+               <i class="el-icon-warning"></i>
+                <span slot="title">{{$t('Sidebar.alarm')}}</span>
+            </el-menu-item>
+            <el-submenu >
+                <template slot="title">
+                   <i class="el-icon-sort"></i>
+                    <span slot="title">{{$t('Sidebar.travel')}}</span>
+                </template>
+                <el-menu-item index="charts">{{$t('Sidebar.travel')}}</el-menu-item>
+                <el-menu-item index="DragList">{{$t('Sidebar.detail')}}</el-menu-item>
+                <el-menu-item index="upload">{{$t('Sidebar.add')}}</el-menu-item>
+            </el-submenu>
+            <el-submenu >
+                <template slot="title">
+                   <i class="el-icon-setting"></i>
+                    <span slot="title">{{$t('Sidebar.log')}}</span>
+                </template>
+                <el-menu-item index="user">{{$t('Sidebar.user')}}</el-menu-item>
+                <el-menu-item index="control">{{$t('Sidebar.control')}}</el-menu-item>
+            </el-submenu>
             <div class="collapse-btn" @click="collapseChage">
                 <i class="el-icon-d-arrow-right"></i>
             </div>
@@ -33,147 +65,7 @@
         data() {
             return {
                 collapse: false,
-                items: [
-                    {
-                        icon: 'el-icon-menu',
-                        index: 'index',
-                        title: '首页'
-                    },
-                    {
-                        icon: 'el-icon-rank',
-                        index: 'chest',
-                        title: '冷箱',
-                        subs:[
-                            {
-                                index: 'list',
-                                title: '列表'
-                            },
-                            {
-                                index: 'group',
-                                title: '分组'
-                            },
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-location',
-                        index: 'location',
-                        title: '定位',
-                        subs: [
-                            {
-                                index: 'location',
-                                title: '定位'
-                            },
-                            {
-                                index: 'chest',
-                                title: '轨迹'
-                            },
-                            // {
-                            //     index: 'trace',
-                            //     title: '追踪'
-                            // },
-                            // {
-                            //     index: 'upload',
-                            //     title: '文件上传'
-                            // }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-view',
-                        index: 'tabs',
-                        title: '监控',
-                        subs:[
-                            {
-                                index: 'Tabs',
-                                title: '箱体'
-                            },
-                            {
-                                index: 'refirgerator',
-                                title: '冷机'
-                            },
-                            {
-                                index: 'door',
-                                title: '箱门'
-                            },
-                            {
-                                index: 'trend',
-                                title: '新风'
-                            },
-                            {
-                                index: 'duration',
-                                title: '时长'
-                            },
-                        ]
-
-                    },
-                    {
-                        icon: 'el-icon-sort',
-                        index: '3',
-                        title: '报警',
-                        subs: [
-                            {
-                                index: 'form',
-                                title: '实时'
-                            },
-                            {
-                                index: 'editor',
-                                title: '历史'
-                            },
-                            {
-                                index: 'markdown',
-                                title: '设置'
-                            },
-                            // {
-                            //     index: 'upload',
-                            //     title: '文件上传'
-                            // }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-setting',
-                        index: 'charts',
-                        title: '行程',
-                        subs: [
-                            {
-                                index: 'charts',
-                                title: '行程'
-                            },
-                            {
-                                index: 'DragList',
-                                title: '详细'
-                            },
-                            {
-                                index: 'upload',
-                                title: '添加'
-                            },
-                            
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-warning',
-                        index: 'drag',
-                        title: '日志',
-                        subs: [
-                            {
-                                index: 'user',
-                                title: '用户'
-                            },
-                            {
-                                index: 'control',
-                                title: '控制'
-                            }
-                        ]
-                    },
-                    // {
-                    //     icon: 'el-icon-warning',
-                    //     index: 'permission',
-                    //     title: '权限测试'
-                    // },
-                    // {
-                    //     icon: 'el-icon-error',
-                    //     index: '404',
-                    //     title: '404页面'
-                    // }
-                ]
+                
             }
         },
         computed:{
@@ -198,6 +90,7 @@
 </script>
 
 <style scoped>
+
 .sidebar{
     display: block;
     position: absolute;
@@ -206,7 +99,7 @@
     bottom:0;
 }
 .sidebar-el-menu:not(.el-menu--collapse){
-    width: 150px;
+    width: 160px;
 }
 .sidebar > ul {
     height:100%;
