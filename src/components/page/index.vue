@@ -16,7 +16,7 @@
                     reserve-keyword
                     placeholder="请输入设备关键词"
                     :remote-method="remoteMethod"
-                    :loading="loading" style="margin-top:-5px;margin-left:-90%;height: 32px;">
+                    :loading="loading" style="margin-top:-5px;margin-left:-60%;height: 32px;">
                         <el-option
                         v-for="item in options"
                         :key="item.name"
@@ -131,7 +131,7 @@
                     <el-button type="primary">开启机组</el-button>
                     <el-button type="danger">关闭机组</el-button>
                   </span>
-                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：      时间：</div>
+                  <span style="margin-left:20px;margin-top:10px;">最近一次操作：      时间：</span>
                 </div>
                 <div class="kongzhi1">
                   <b  style="float:left;">设置温度(°C)：</b>
@@ -139,7 +139,7 @@
                   <el-input v-model="input" style="width:120px" placeholder="请输入内容"></el-input>
                     <el-button type="primary">设置</el-button>
                   </span>
-                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：      时间：</div>
+                  <span style="margin-left:20px;margin-top:10px;">最近一次操作：      时间：</span>
                 </div>
                 <div class="kongzhi1">
                   <b  style="float:left;">清除报警：</b>
@@ -147,7 +147,7 @@
                   
                     <el-button type="primary">清除报警</el-button>
                   </span>
-                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：清除报警      时间：</div>
+                  <span style="margin-left:20px;margin-top:10px;">最近一次操作：清除报警      时间：</span>
                 </div>
                 <div class="kongzhi1">
                   <b  style="float:left;">除霜：</b>
@@ -179,7 +179,7 @@
                     <el-button type="primary">设置新风</el-button>
                      <el-button type="danger">关闭新风</el-button>
                   </span>
-                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：     时间：</div>
+                  <div  style="margin-left:140px;margin-top:10px;">最近一次操作：     时间：</div>
                 </div>
           </div>
     </div>
@@ -316,6 +316,11 @@ export default {
                 
             });
              /**
+             * 时间戳
+             */
+            
+
+             /**
              * 温度平均值
              */
             // var temp = "gps_temp1"+"gps_temp2"+"gps_temp3";
@@ -328,6 +333,7 @@ export default {
           this.items = result;
           this.tableData3 = result;
           this.addMarker(result);
+        console.log(result)
           // var conNum_total = 0;
           // var conNum_online = 0;
           // var conNum_offline = 0;
@@ -494,18 +500,18 @@ export default {
 .alert-tab{
   position: fixed;
   z-index:9999;
-  width:50%;
+  width:60%;
   border:1px solid gray;
-  height:65vh;
+  height:70vh;
   margin-top:-40%;
-  margin-left:20%;
+  margin-left:15%;
   background-color:#fff;
   border-radius: 8px;
 }
 .alert-tab p{
     float:left;
     margin-left:50px;
-    margin-top:20px;
+    margin-top:10px;
     color:rgb(83, 163, 233);
 }
 .alert-tab p:hover{
@@ -526,11 +532,11 @@ export default {
     width:400px;
 }
 .kongzhi{
-   margin-top:70px;
+   margin-top:10%;
    margin-left:30px;
 }
 .kongzhi1{
-  margin-top:15px;
+  margin-top:10px;
   margin-left:30px;
 }
 </style>

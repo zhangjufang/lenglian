@@ -13,7 +13,6 @@
             @change="test(value)"
             reserve-keyword
             placeholder="请输入设备关键词"
-            :remote-method="remoteMethod"
             :loading="loading" >
             <el-option
             v-for="item in options"
@@ -71,7 +70,14 @@ export default {
           tableData3:[],
           value:'',
           options: [],
-          value: ''            
+          value: '',
+          cooler_voltage: [],
+          ambient_temp:[],
+          re_air_temp:[],
+          out_air_temp:[],
+          cooler_set_temp:[],
+          oil_temp:[],
+          insert_time:[]        
         }
       },
       mounted() {
@@ -99,47 +105,43 @@ export default {
                 }
               } 
             });
-            
-            /**
-             * 添加地址信息
-             */
-
             return item;
           });
+          
           this.items = result;
           this.tableData3 = result;
-          console.log(this.items)
-          
-          var cooler_voltage=[];
-          var ambient_temp=[];
-          var re_air_temp=[];
-          var out_air_temp=[];
-          var cooler_set_temp=[];
-          var oil_temp=[];
-          var insert_time=[];
-          for(var i=0;i<this.items.length;i++){
-          cooler_voltage[i]=this.items[i].cooler_voltage/100;
-          ambient_temp[i]=this.items[i].ambient_temp/10;
-           re_air_temp[i]=this.items[i].re_air_temp/10;
-           out_air_temp[i]=this.items[i].out_air_temp/10;
-           cooler_set_temp[i]=this.items[i].cooler_set_temp/10;
-           oil_temp[i]=this.items[i].oil_temp/10;
-           insert_time[i]=this.items[i].insert_time;
-           //{{time|formatDate}}
-            // console.log(re_air_temp)
-            console.log(insert_time)
+          console.log(this.items);
            
+          for(var i=0;i<this.items.length;i++){
+            this.cooler_voltage[i] = result[i].cooler_voltage/100;
+            this.ambient_temp[i]=this.items[i].ambient_temp;
+            this.re_air_temp[i]=this.items[i].re_air_temp/10;
+            this.out_air_temp[i]=this.items[i].out_air_temp/10;
+            this.cooler_set_temp[i]=this.items[i].cooler_set_temp/10;
+            this.oil_temp[i]=this.items[i].oil_temp/10;
+            
+            console.log(this.items[i].out_air_temp);
+
+            this.insert_time[i] = (function(date){
+              date = date*1000;
+              var da = new Date();
+              da.setTime(date);
+            return da.getFullYear() + "/" + (da.getMonth() + 1) + "/" + da.getDate() + "/ " + da.getHours() + ":" + da.getMinutes() + ":" + da.getSeconds()
+               
+            })(this.items[i].insert_time)
+            
           };
           
-
+          console.log(this.insert_time,this.cooler_voltage);
+          this.drawLine();
         });
     },
     drawLine(){
-      
+        var that = this;
+        
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('myChart'))
-        // 绘制图表
-        myChart.setOption({
+        var options = {
             title: { text: '传感器温湿度' },
             tooltip: {
               trigger: 'axis',
@@ -192,9 +194,7 @@ export default {
               ]
             },
             xAxis: {
-              type:'category',
-              boundaryGap:false,
-              data:this.insert_time
+              data:that.insert_time
             },
             yAxis: {},
             series: [{
@@ -205,59 +205,55 @@ export default {
                     width:2
                   }
                 },
-                data: this.cooler_voltage
+                data: that.cooler_voltage
             },
             {
                 name: '环境',
                 type: 'line',
-                data: this.ambient_temp
+                data: [1,2,3,4,5]
             },
             {
                 name: '回风',
                 type: 'line',
-                data: this.re_air_temp
+                data: that.re_air_temp
             },
             {
                 name: '送风',
                 type: 'line',
-                data: this.out_air_temp
+                data: that.out_air_temp
             },
             {
                 name: '设定温度',
                 type: 'line',
-                data: this.cooler_set_temp
+                data: that.cooler_set_temp
             },
             {
                 name: '蒸发器盘管温度',
                 type: 'line',
-                data: this.oil_temp
+                data: that.oil_temp
             }
             ]
-        });
+        }
+        console.log('data==' ,options.series[0].data.length);
+        // 绘制图表
+        myChart.setOption(options);
     }
   
   },
-  remoteMethod(query) {
-      // console.log("query===",query,this.items);
-      if (query !== "") {
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.options = this.items.filter(item => {
-            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
-          });
-        }, 200);
-      } else {
-        this.options = [];
-      }
-    },
-     filters: {
-        formatDate(time) {
-            var date = new Date(time);
-            return formatDate(date, 'yyyy-MM-dd hh:mm');
-        }
-    }
-
+  // remoteMethod(query) {
+  //     // console.log("query===",query,this.items);
+  //     if (query !== "") {
+  //       this.loading = true;
+  //       setTimeout(() => {
+  //         this.loading = false;
+  //         this.options = this.items.filter(item => {
+  //           return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+  //         });
+  //       }, 200);
+  //     } else {
+  //       this.options = [];
+  //     }
+  //   },
 }
 </script>
 

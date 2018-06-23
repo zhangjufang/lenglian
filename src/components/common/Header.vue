@@ -340,14 +340,14 @@
         background-color:rgb(0,52,102)
     }
     .users{
-        margin-top:50px;
-        margin-left:150px;
+        margin-top:5%;
+        margin-left:15%;
     }
     .users b{
         font-size:18px;
         display:block;
         color:black;
-        margin-top:20px;
+        /* margin-top:3%; */
     }
     .chan{
         position: fixed;
