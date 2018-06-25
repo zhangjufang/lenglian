@@ -1,3 +1,22 @@
+Skip to content
+ 
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ @zhangjufang
+Sign out
+1
+0 0 zhangjufang/lenglian
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Insights  Settings
+lenglian/src/components/page/index.vue
+72aae77  2 days ago
+@zhangjufang zhangjufang '23xiugai'
+@zhangjufang @niulixin
+     
+542 lines (526 sloc)  20.1 KB
 <template>
     <div>
         <div style="display: flex;justify-content: space-between;">
@@ -68,7 +87,7 @@
                     <el-table-column prop="water_temp" label="机组水温°C" width="84"></el-table-column>
                     <el-table-column prop="suction_press" label="吸气压力" width="70"></el-table-column>
                     <el-table-column prop="discharge_press" label="排气压力" width="70"></el-table-column>
-                    <el-table-column prop="insert_time" label="更新时间" width="100" sortable></el-table-column>
+                    <el-table-column prop="insert_time" label="更新时间" width="120" sortable></el-table-column>
                     <el-table-column prop="address" label="地址"></el-table-column>
                 </el-table>
             </template>
@@ -315,11 +334,9 @@ export default {
                 // item.address = addComp.province + " " + addComp.city + " " + addComp.district;]
                 
             });
-             /**
-             * 时间戳
-             */
+             
             
-
+          
              /**
              * 温度平均值
              */
@@ -328,12 +345,82 @@ export default {
             // this.$set(this.tableData3[i],'average');
             return item;
             
+            
           });
             // console.log('result==',result);
           this.items = result;
           this.tableData3 = result;
-          this.addMarker(result);
-        console.log(result)
+          this.addMarker(this.items);
+          // console.log(this.items.rever);
+          /**
+           * 时间戳
+           */
+          for(var i=0;i<this.items.length;i++){
+            this.items[i].insert_time = (function(date){
+              date = date*1000;
+              var da = new Date();
+              da.setTime(date);
+            return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
+            + ((da.getDate()< 10 ? '0'+(da.getDate()) : da.getDate()))+ " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
+            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
+             + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
+              
+            })(this.items[i].insert_time)
+           
+          };
+          for(var i=0;i<this.items.length;i++){
+            // console.log(this.items[1].gps_time);
+            this.items[i].gps_time = (function(date){
+              date = date*1000;
+              var da = new Date();
+              da.setTime(date);
+           return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
+            + ((da.getDate()< 10 ? '0'+(da.getDate()) : da.getDate()))+ " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
+            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
+             + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
+            })(this.items[i].gps_time)
+            
+          };
+        //  for(var i =0 ;i<this.items.length;i++){
+            // console.log(this.items[i].Reserve6);
+            // this.items[i].reserve6 = (function(date){
+            //   if(Reserve6 < 0){return '-';}
+            //     var modulo = parseInt(Reserve6/45);
+            //     var remainder = Reserve6 - modulo*45;
+            //     remainder = parseInt(remainder*10)/10;
+            //     var direction = '-';
+            //     switch(modulo){
+            //       case 0://北偏东
+            //         direction = remainder > 0 ?'北偏东'+ remainder +'度':'正北';
+            //         break;
+            //       case 1://东偏北
+            //         direction = '东偏北'+ (45 - remainder) +'度';
+            //         break;
+            //       case 2://东偏南
+            //         direction = remainder > 0 ?'东偏南'+ remainder +'度':'正东';
+            //         break;
+            //       case 3://南偏东
+            //         direction = '南偏东'+ (45 - remainder) +'度';
+            //         break;
+            //       case 4://南偏西
+            //         direction = remainder > 0 ?'南偏西'+ remainder +'度':'正南';
+            //         break;
+            //       case 5://西偏南
+            //         direction = '西偏南'+ (45 - remainder) +'度';
+            //         break;
+            //       case 6://西偏北
+            //         direction = remainder > 0 ?'西偏北'+ remainder +'度':'正西';
+            //         break;
+            //       case 7://西偏北
+            //         direction = '西偏北'+ (45 - remainder) +'度';
+            //         break;
+            //     }
+            //     return direction;
+            // }
+            // )(this.items[i].reserve6)
+        //  }
+           
+
           // var conNum_total = 0;
           // var conNum_online = 0;
           // var conNum_offline = 0;
@@ -362,7 +449,7 @@ export default {
         this.map.addOverlay(marker);
         var opts = {
           width: 50, // 信息窗口宽度
-          height: 280 // 信息窗口高度
+          height: 320 // 信息窗口高度
         };
         marker.addEventListener("click", function(e) {
           //获取点的信息
@@ -383,7 +470,7 @@ export default {
             //   " " +
             //   addComp.district;
             sContent +="</br>定位地址：" +points[i].address;
-            sContent += "</br>定位时间：" + points[i].insert_time;
+            sContent += "</br>定位时间：" + points[i].gps_time;
             sContent += "</br>速    度：" + points[i].speed + "Km/h";
             sContent += "</br>方    向：";
             sContent += "</br>箱内温度：" + points[i].ambient_temp + "°C";
@@ -391,7 +478,7 @@ export default {
             sContent += "</br>出风温度：" + points[i].out_air_temp + "°C";
             sContent += "</br>机组模式：" + points[i].zone_status;
             sContent += "</br>报警代码：" + points[i].zone_alarm_code;
-            sContent += "</br>数据时间：" + points[i].gps_time;
+            sContent += "</br>数据时间：" + points[i].insert_time;
             var infoWindow = new window.BMap.InfoWindow(sContent, opts);
             var point = new window.BMap.Point(lng, lat);
             this.map.openInfoWindow(infoWindow, point); //开启信息窗口

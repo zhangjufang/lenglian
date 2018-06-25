@@ -41,8 +41,8 @@
             <template >
                 <el-table :data="tableData3" border style="width:90%;margin-left:30px;text-color:#000;border:1px solid rgb(180, 173, 173);font-size:12px;"  height="50vh"  :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="120" sortable ></el-table-column>
-                    <el-table-column prop="cooler_off_flag" label="状态" width="100" sortable></el-table-column>
-                    <el-table-column prop="cooler_voltage" label="电压" width="100" sortable></el-table-column>
+                    <el-table-column prop="cooler_off_flag" label="状态" width="90" sortable></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="电压" width="90" sortable></el-table-column>
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
                     <el-table-column prop="cooler_rpm" label="发动机转速" width="100"></el-table-column>
                     <el-table-column prop="ambient_temp" label="环境" width="100" sortable></el-table-column>
@@ -111,6 +111,21 @@ export default {
           this.items = result;
           this.tableData3 = result;
           console.log(this.items);
+
+
+          // for(var i=0;i<this.items.length;i++){
+          //   // console.log(this.items[1].insert_time);
+          //   this.items[i].insert_time = (function(date){
+          //     date = date*1000;
+          //     var da = new Date();
+          //     da.setTime(date);
+          //   return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
+          //   + da.getDate() + " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
+          //   + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":" + da.getMinutes() 
+              
+          //   })(this.items[i].insert_time)
+           
+          // };
            
           for(var i=0;i<this.items.length;i++){
             this.cooler_voltage[i] = result[i].cooler_voltage/100;
@@ -120,19 +135,23 @@ export default {
             this.cooler_set_temp[i]=this.items[i].cooler_set_temp/10;
             this.oil_temp[i]=this.items[i].oil_temp/10;
             
-            console.log(this.items[i].out_air_temp);
+            // console.log(this.items[i].out_air_temp);
 
-            this.insert_time[i] = (function(date){
+           this.items[i].insert_time = (function(date){
               date = date*1000;
               var da = new Date();
               da.setTime(date);
-            return da.getFullYear() + "/" + (da.getMonth() + 1) + "/" + da.getDate() + "/ " + da.getHours() + ":" + da.getMinutes() + ":" + da.getSeconds()
-               
-            })(this.items[i].insert_time)
-            
+              
+            return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
+            + ((da.getDate()< 10 ? '0'+(da.getDate()) : da.getDate()))+ " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
+            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
+             + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
+             
+            })(this.items[i].insert_time) 
+            this.insert_time[i]=this.items[i].insert_time;
           };
           
-          console.log(this.insert_time,this.cooler_voltage);
+          // console.log(this.insert_time,this.cooler_voltage);
           this.drawLine();
         });
     },
@@ -194,7 +213,7 @@ export default {
               ]
             },
             xAxis: {
-              data:that.insert_time
+              data:that.insert_time.reverse()
             },
             yAxis: {},
             series: [{
@@ -234,7 +253,7 @@ export default {
             }
             ]
         }
-        console.log('data==' ,options.series[0].data.length);
+        // console.log('data==' ,options.series[0].data.length);
         // 绘制图表
         myChart.setOption(options);
     }
