@@ -41,18 +41,23 @@
             <template >
                 <el-table :data="tableData3" border style="width:90%;margin-left:30px;text-color:#000;border:1px solid rgb(180, 173, 173);font-size:12px;"  height="50vh"  :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="120" sortable ></el-table-column>
-                    <el-table-column prop="cooler_off_flag" label="状态" width="90" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" label="湿度" width="90" sortable></el-table-column>
+                    <el-table-column prop="gps_temp1" label="温度1" width="75"></el-table-column>
+                    <el-table-column prop="gps_temp2" label="温度2" width="75"></el-table-column>
+                    <el-table-column prop="gps_temp3" label="温度3" width="75"></el-table-column>
+                    <el-table-column prop="gps_oil_level" label="油位%" width="75"></el-table-column>
+                    <el-table-column prop="reserve5" label="CO2 ppm" width="80"></el-table-column>
                     <el-table-column prop="cooler_voltage" label="电压" width="90" sortable></el-table-column>
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
-                    <el-table-column prop="cooler_rpm" label="发动机转速" width="100"></el-table-column>
-                    <el-table-column prop="ambient_temp" label="环境" width="100" sortable></el-table-column>
-                    <el-table-column prop="re_air_temp" label="回风" width="100" sortable></el-table-column>
-                    <el-table-column prop="out_air_temp" label="送风" width="84"></el-table-column>
-                    <el-table-column prop="cooler_set_temp" label="设定温度" width="75"></el-table-column>
-                    <el-table-column prop="oil_temp" label="盘发器盘管温度" width="150" sortable></el-table-column>
-                    <el-table-column prop="zone_alarm_code" label="告警吗" width="80"></el-table-column>
-                    <el-table-column prop="zone_status" label="主机状态" width="90"></el-table-column>
-                    <el-table-column prop="zone_status" label="运行状态" width="180"></el-table-column>
+                    <el-table-column prop="speed" label="速度 km/h" width="100"></el-table-column>
+                    <el-table-column prop="reserve6" label="方向" width="100" sortable></el-table-column>
+                    <el-table-column prop="re_air_temp" label="回风温度" width="100" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" label="送风温度" width="84"></el-table-column>
+                    <!-- <el-table-column prop="cooler_set_temp" label="设定温度" width="75"></el-table-column> -->
+                    <!-- <el-table-column prop="oil_temp" label="盘发器盘管温度" width="150" sortable></el-table-column> -->
+                    <!-- <el-table-column prop="zone_alarm_code" label="告警吗" width="80"></el-table-column> -->
+                    <!-- <el-table-column prop="zone_status" label="主机状态" width="90"></el-table-column> -->
+                    <el-table-column prop="zone_status" label="冷机状态" width="180"></el-table-column>
                     <el-table-column prop="insert_time" label="时间" ></el-table-column>
                 </el-table>
             </template>
@@ -99,11 +104,40 @@ export default {
                 if (item[key] == "0") {
                   item[key] = "不明状态";
                 }
-              } else {
-                if (item[key] == "-999") {
+              } 
+              if (item[key] == "-999"||item[key] == "-99") {
                   item[key] = "-";
                 }
+              if(key == "cooler_off_flag"){
+               
+                if (item[key] == "0") {
+                  item[key] = "关机";
+                }else{
+                  item[key] = "正常";
+                }
+              }if(key == "cooler_voltage"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/100;
+                } 
               } 
+              if (key == "re_air_temp") {  
+                item[key] = item[key]/10;
+              }
+              if (key == "gps_temp1") {  
+                item[key] = item[key]/10;
+              }  
+              if (key == "gps_temp2") {  
+                item[key] = item[key]/10;
+              } 
+              if (key == "gps_temp3") {  
+                item[key] = item[key]/10;
+              } 
+              if (key == "cooler_set_temp") {  
+                item[key] = item[key]/10;
+              }
+              else{
+                return;
+              }
             });
             return item;
           });
@@ -127,14 +161,14 @@ export default {
            
           // };
            
-          for(var i=0;i<this.items.length;i++){
-            this.cooler_voltage[i] = result[i].cooler_voltage/100;
-            this.ambient_temp[i]=this.items[i].ambient_temp;
-            this.re_air_temp[i]=this.items[i].re_air_temp/10;
-            this.out_air_temp[i]=this.items[i].out_air_temp/10;
-            this.cooler_set_temp[i]=this.items[i].cooler_set_temp/10;
-            this.oil_temp[i]=this.items[i].oil_temp/10;
-            
+          for(let i = 0;i<this.items.length;i++){
+            this.gps_humi[i] = result[i].gps_humi;
+            this.gps_temp1[i]=this.items[i].gps_temp1;
+            this.gps_temp2[i]=this.items[i].gps_temp2;
+            this.gps_temp3[i]=this.items[i].gps_temp3;
+            this.gps_oil_level[i]=this.items[i].gps_oil_level;
+            this.gps_voltage[i]=this.items[i].gps_voltage;
+            this.reserve5[i]=this.items[i].reserve5;
             // console.log(this.items[i].out_air_temp);
 
            this.items[i].insert_time = (function(date){
@@ -149,6 +183,10 @@ export default {
              
             })(this.items[i].insert_time) 
             this.insert_time[i]=this.items[i].insert_time;
+
+
+
+            
           };
           
           // console.log(this.insert_time,this.cooler_voltage);
@@ -161,7 +199,7 @@ export default {
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('myChart'))
         var options = {
-            title: { text: '传感器温湿度' },
+            title: { text: '冷机数据' },
             tooltip: {
               trigger: 'axis',
               axisPointer: {
@@ -193,22 +231,25 @@ export default {
           ],
             legend:{
               data:[{
-                name: '电压',
+                name: '湿度',
               },
               {
-                name: '环境',
+                name: '温度1',
               },
               {
-                name: '回风',
+                name: '温度2',
               },
               {
-                name: '送风',
+                name: '温度3',
               },
               {
-                name: '设定温度',
+                name: '油位',
               },
               {
-                name: '蒸发器盘管温度',
+                name: '电压值',
+              },
+              {
+                name: 'CO2',
               }
               ]
             },
@@ -217,39 +258,44 @@ export default {
             },
             yAxis: {},
             series: [{
-                name: '电压',
+                name: '湿度',
                 type: 'line',
                 lineStyle:{
                   nomal:{
                     width:2
                   }
                 },
-                data: that.cooler_voltage
+                data: that.gps_humi
             },
             {
-                name: '环境',
+                name: '温度1',
                 type: 'line',
-                data: [1,2,3,4,5]
+                data: that.gps_temp1
             },
             {
-                name: '回风',
+                name: '温度2',
                 type: 'line',
-                data: that.re_air_temp
+                data: that.gps_temp2
             },
             {
-                name: '送风',
+                name: '温度3',
                 type: 'line',
-                data: that.out_air_temp
+                data: that.gps_temp3
             },
             {
-                name: '设定温度',
+                name: '油位',
                 type: 'line',
-                data: that.cooler_set_temp
+                data: that.gps_oil_level
             },
             {
-                name: '蒸发器盘管温度',
+                name: '电压值',
                 type: 'line',
-                data: that.oil_temp
+                data: that.gps_voltage
+            },
+            {
+                name: 'CO2',
+                type: 'line',
+                data: that.reserve5
             }
             ]
         }

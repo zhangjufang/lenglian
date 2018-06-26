@@ -1,22 +1,4 @@
-Skip to content
- 
-Search or jump to…
 
-Pull requests
-Issues
-Marketplace
-Explore
- @zhangjufang
-Sign out
-1
-0 0 zhangjufang/lenglian
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Insights  Settings
-lenglian/src/components/page/index.vue
-72aae77  2 days ago
-@zhangjufang zhangjufang '23xiugai'
-@zhangjufang @niulixin
-     
-542 lines (526 sloc)  20.1 KB
 <template>
     <div>
         <div style="display: flex;justify-content: space-between;">
@@ -28,9 +10,9 @@ lenglian/src/components/page/index.vue
             <div>
                 <el-select
                     v-model="value"
-
                     filterable
                     remote
+                    clearable
                     @change="test(value)"
                     reserve-keyword
                     placeholder="请输入设备关键词"
@@ -56,10 +38,10 @@ lenglian/src/components/page/index.vue
                 <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" 
                 class="el" height="68vh"  @row-click="openalert()" :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="100" sortable></el-table-column>
-                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="108" sortable></el-table-column>
-                    <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="105" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" label="箱内湿度%" width="98" sortable></el-table-column>
                     <el-table-column prop="zone_status" label="机组状态" width="120"></el-table-column>
-                    <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="冷机电压" width="70"></el-table-column>
                     <!-- <el-table-column prop="cooler_set_temp" label="设定温度°C" width="100"></el-table-column> -->
 
                     <!-- <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
@@ -72,22 +54,22 @@ lenglian/src/components/page/index.vue
         </div>
         <div class="grid">
             <template >
-                <el-table :data="tableData3" border style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);" class="table2"  height="9vh"  :default-sort = "{prop: 'date', order: 'descending'}">
-                    <el-table-column fixed prop="name" label="箱体编号" width="105" sortable ></el-table-column>
-                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="108" sortable></el-table-column>
+                <el-table :data="tableData3" border style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);" class="table2"  height="11vh"  :default-sort = "{prop: 'date', order: 'descending'}">
+                    <el-table-column fixed prop="name" label="箱体编号" width="110" sortable ></el-table-column>
+                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="120" sortable></el-table-column>
                     <el-table-column prop="gps_humi" label="箱内湿度%" width="108" sortable></el-table-column>
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
-                    <el-table-column prop="cooler_set_temp" label="设定温度°C" width="84"></el-table-column>
-                    <el-table-column prop="re_air_temp" label="回风温度°C" width="108" sortable></el-table-column>
-                    <el-table-column prop="out_air_temp" label="出风温度°C" width="108" sortable></el-table-column>
-                    <el-table-column prop="ambient_temp" label="环境温度°C" width="84"></el-table-column>
+                    <el-table-column prop="cooler_set_temp" label="设定温度°C" width="90"></el-table-column>
+                    <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" label="环境温度°C" width="90"></el-table-column>
                     <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
-                    <el-table-column prop="gps_voltage" label="副电压" width="82" sortable></el-table-column>
-                    <el-table-column prop="current" label="机组电流" width="70"></el-table-column>
-                    <el-table-column prop="water_temp" label="机组水温°C" width="84"></el-table-column>
-                    <el-table-column prop="suction_press" label="吸气压力" width="70"></el-table-column>
-                    <el-table-column prop="discharge_press" label="排气压力" width="70"></el-table-column>
-                    <el-table-column prop="insert_time" label="更新时间" width="120" sortable></el-table-column>
+                    <el-table-column prop="gps_voltage" label="副电压" width="85" sortable></el-table-column>
+                    <el-table-column prop="current" label="机组电流" width="75"></el-table-column>
+                    <el-table-column prop="water_temp" label="机组水温°C" width="88"></el-table-column>
+                    <el-table-column prop="suction_press" label="吸气压力" width="75"></el-table-column>
+                    <el-table-column prop="discharge_press" label="排气压力" width="75"></el-table-column>
+                    <el-table-column prop="insert_time" label="更新时间" width="145"  sortable></el-table-column>
                     <el-table-column prop="address" label="地址"></el-table-column>
                 </el-table>
             </template>
@@ -98,7 +80,7 @@ lenglian/src/components/page/index.vue
             <el-button style="float:right;margin-right:20px;padding:5px 6px;" @click="togglePanel">关闭</el-button>
           </div>
             <div class="tittl" style="font-size:18px;">
-                <p @click="servicePro">冷机</p>
+                <div style="width：10%；border-right：1px solid rgb(83, 163, 233);"><p @click="servicePro">冷机</p></div>
                 <p @click="tencent">传感器</p>
                 <p @click="zizhi">控制</p>
             </div>
@@ -303,13 +285,18 @@ export default {
                 if (item[key] !== "-") {
                  item[key] =  item[key]/100;
                 } 
-              }if(key == "ambient_temp"){
-                var key = "gps_temp1"+"gps_temp2"+"gps_temp3";
-                item[key] =  item[key]/30;
               }if(key == "gps_voltage"){
                
                 item[key] =  item[key]/10;
-              }else{
+              }if(key == "cooler_set_temp"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
+              }if(key == "out_air_temp"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
+              } else{
                 return;
               }
             });
@@ -332,11 +319,7 @@ export default {
               var addComp = rs.addressComponents;
                 this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district);
                 // item.address = addComp.province + " " + addComp.city + " " + addComp.district;]
-                
             });
-             
-            
-          
              /**
              * 温度平均值
              */
@@ -345,17 +328,17 @@ export default {
             // this.$set(this.tableData3[i],'average');
             return item;
             
-            
           });
             // console.log('result==',result);
           this.items = result;
           this.tableData3 = result;
           this.addMarker(this.items);
-          // console.log(this.items.rever);
+          
           /**
            * 时间戳
            */
           for(var i=0;i<this.items.length;i++){
+            // console.log(this.items[i].insert_time);
             this.items[i].insert_time = (function(date){
               date = date*1000;
               var da = new Date();
@@ -363,11 +346,12 @@ export default {
             return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
             + ((da.getDate()< 10 ? '0'+(da.getDate()) : da.getDate()))+ " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
             + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
-             + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
-              
+            + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))       
             })(this.items[i].insert_time)
            
           };
+
+          //时间戳转化成时间格式
           for(var i=0;i<this.items.length;i++){
             // console.log(this.items[1].gps_time);
             this.items[i].gps_time = (function(date){
@@ -379,46 +363,59 @@ export default {
             + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
              + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
             })(this.items[i].gps_time)
-            
           };
-        //  for(var i =0 ;i<this.items.length;i++){
-            // console.log(this.items[i].Reserve6);
-            // this.items[i].reserve6 = (function(date){
-            //   if(Reserve6 < 0){return '-';}
-            //     var modulo = parseInt(Reserve6/45);
-            //     var remainder = Reserve6 - modulo*45;
-            //     remainder = parseInt(remainder*10)/10;
-            //     var direction = '-';
-            //     switch(modulo){
-            //       case 0://北偏东
-            //         direction = remainder > 0 ?'北偏东'+ remainder +'度':'正北';
-            //         break;
-            //       case 1://东偏北
-            //         direction = '东偏北'+ (45 - remainder) +'度';
-            //         break;
-            //       case 2://东偏南
-            //         direction = remainder > 0 ?'东偏南'+ remainder +'度':'正东';
-            //         break;
-            //       case 3://南偏东
-            //         direction = '南偏东'+ (45 - remainder) +'度';
-            //         break;
-            //       case 4://南偏西
-            //         direction = remainder > 0 ?'南偏西'+ remainder +'度':'正南';
-            //         break;
-            //       case 5://西偏南
-            //         direction = '西偏南'+ (45 - remainder) +'度';
-            //         break;
-            //       case 6://西偏北
-            //         direction = remainder > 0 ?'西偏北'+ remainder +'度':'正西';
-            //         break;
-            //       case 7://西偏北
-            //         direction = '西偏北'+ (45 - remainder) +'度';
-            //         break;
-            //     }
-            //     return direction;
-            // }
-            // )(this.items[i].reserve6)
-        //  }
+
+          //华氏度转摄氏度 以及平均值
+          for(var i=0;i<this.items.length;i++){
+            console.log(this.items[1].ambient_temp);
+            this.items[i].ambient_temp = (function(t){
+              if (t=='-') return t;
+              t = this.items[i].gps_temp1+this.items[i].gps_temp2+this.items[i].gps_temp3
+            	return parseInt(10*(t - 32)/1.8)/30;
+            })(this.items[i].ambient_temp)
+          };
+
+          //方向描述
+         for(var j = 0 ;j<this.items.length;j++){ 
+          // console.log(this.items[j].reserve6)
+            this.items[j].reserve6 = (function(angle){
+              if(angle < 0){return '-';}
+                      var modulo = parseInt(angle/45);
+                      var remainder = angle - modulo*45;
+                      remainder = parseInt(remainder*10)/10;
+                      var direction = '-';
+                      switch(modulo){
+                        case 0://北偏东
+                          direction = remainder > 0 ?'北偏东'+ remainder +'度':'正北';
+                          break;
+                        case 1://东偏北
+                          direction = '东偏北'+ (45 - remainder) +'度';
+                          break;
+                        case 2://东偏南
+                          direction = remainder > 0 ?'东偏南'+ remainder +'度':'正东';
+                          break;
+                        case 3://南偏东
+                          direction = '南偏东'+ (45 - remainder) +'度';
+                          break;
+                        case 4://南偏西
+                          direction = remainder > 0 ?'南偏西'+ remainder +'度':'正南';
+                          break;
+                        case 5://西偏南
+                          direction = '西偏南'+ (45 - remainder) +'度';
+                          break;
+                        case 6://西偏北
+                          direction = remainder > 0 ?'西偏北'+ remainder +'度':'正西';
+                          break;
+                        case 7://西偏北
+                          direction = '西偏北'+ (45 - remainder) +'度';
+                          break;
+                          
+                  }
+                return direction;
+             
+            })(this.items[j].reserve6) 
+            // this.reserve6[j]=this.items[j].reserve6;
+         }
            
 
           // var conNum_total = 0;
@@ -472,7 +469,7 @@ export default {
             sContent +="</br>定位地址：" +points[i].address;
             sContent += "</br>定位时间：" + points[i].gps_time;
             sContent += "</br>速    度：" + points[i].speed + "Km/h";
-            sContent += "</br>方    向：";
+            sContent += "</br>方    向："+ points[i].reserve6;
             sContent += "</br>箱内温度：" + points[i].ambient_temp + "°C";
             sContent += "</br>设定温度：" + points[i].cooler_set_temp + "°C";
             sContent += "</br>出风温度：" + points[i].out_air_temp + "°C";
@@ -589,8 +586,8 @@ export default {
   z-index:9999;
   width:60%;
   border:1px solid gray;
-  height:70vh;
-  margin-top:-40%;
+  height:70%;
+  margin-top:-38%;
   margin-left:15%;
   background-color:#fff;
   border-radius: 8px;
