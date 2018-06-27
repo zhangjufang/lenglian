@@ -38,10 +38,10 @@
                 <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" 
                 class="el" height="68vh"  @row-click="openalert()" :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="100" sortable></el-table-column>
-                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="105" sortable></el-table-column>
-                    <el-table-column prop="gps_humi" label="箱内湿度%" width="98" sortable></el-table-column>
-                    <el-table-column prop="zone_status" label="机组状态" width="120"></el-table-column>
-                    <el-table-column prop="cooler_voltage" label="冷机电压" width="70"></el-table-column>
+                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
+                    <el-table-column prop="zone_status" label="机组状态" width="75"></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
                     <!-- <el-table-column prop="cooler_set_temp" label="设定温度°C" width="100"></el-table-column> -->
 
                     <!-- <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
@@ -61,7 +61,7 @@
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
                     <el-table-column prop="cooler_set_temp" label="设定温度°C" width="90"></el-table-column>
                     <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
-                    <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" label="出风温度°C" width="115" sortable></el-table-column>
                     <el-table-column prop="ambient_temp" label="环境温度°C" width="90"></el-table-column>
                     <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
                     <el-table-column prop="gps_voltage" label="副电压" width="85" sortable></el-table-column>
@@ -365,15 +365,15 @@ export default {
             })(this.items[i].gps_time)
           };
 
-          //华氏度转摄氏度 以及平均值
-          for(var i=0;i<this.items.length;i++){
-            console.log(this.items[1].ambient_temp);
-            this.items[i].ambient_temp = (function(t){
-              if (t=='-') return t;
-              t = this.items[i].gps_temp1+this.items[i].gps_temp2+this.items[i].gps_temp3
-            	return parseInt(10*(t - 32)/1.8)/30;
-            })(this.items[i].ambient_temp)
-          };
+        //  //华氏度转摄氏度 以及平均值
+        //   for(var o=0;o<this.items.length;o++){
+        //     console.log(this.items[o].ambient_temp);
+        //     this.items[o].ambient_temp = (function(t){
+        //       if (t=='-') return t;
+        //       // t = this.items[i].gps_temp1+this.items[i].gps_temp2+this.items[i].gps_temp3
+        //     	return parseInt(10*((this.items[o].gps_temp1+this.items[o].gps_temp2+this.items[o].gps_temp3)- 32)/1.8)/30;
+        //     })(this.items[o].ambient_temp)
+        //   };
 
           //方向描述
          for(var j = 0 ;j<this.items.length;j++){ 
@@ -518,6 +518,8 @@ export default {
         },
         openalert(){
           this.look = true;
+          // alert(e.target);
+          this.highlight();
         }
   },
   created: function() {},

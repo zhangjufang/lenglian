@@ -35,8 +35,9 @@
             </div>
         </div> 
         <BMap class="map" @returnMap="receiveMap"></BMap>
-        <div class="icon">
-            <div class="rights" v-if="show">
+        
+          <div class="icon">
+            <div class="rights" v-if="show" >
                 <el-select
                     v-model="value"
                     filterable
@@ -54,10 +55,14 @@
                         :value="item.name">
                     </el-option>
                 </el-select>
-                <div class="list" v-for="item in options" :key="item.value" :value="item.value">
-                  <p>所有设备</p>
-                  <div >{{item.name}}</div>
-                </div>
+                <!-- <div class="list" > -->
+                  <p style="margin-left:20px;margin-top:10px;"> 所有设备({{items.length}})</p>
+                  <div class="list-right" v-for="item in tableData3" :key="item.value" :value="item.value">
+                    <img src="../images/car.png" alt="">  
+                    <div   class="list" style="margin-top:2px;font-size:13px;float:left;margin-left:15%;">{{item.name}}</div>
+                   
+                  </div>
+                <!-- </div> -->
             </div>
             <div class="change"><img src="../images/btn.png" alt="" v-on:click="show = !show" ></div>
         </div>
@@ -77,18 +82,18 @@
         </div> -->
         <div class="tab-bot">
             <template >
-                <el-table  border  height="100"  :default-sort = "{prop: 'date', order: 'descending'}"  :data="tableData3"> 
-                    <el-table-column  type="index" label="序号" width="50" ></el-table-column>
+                <el-table  border  height="10vh"  :default-sort = "{prop: 'date', order: 'descending'}"  :data="tableData3"> 
+                    <el-table-column  type="index" label="序号" width="50"></el-table-column>
                     <el-table-column prop="name" label="箱号" ></el-table-column>
-                    <el-table-column prop="insert_time" label="定位时间"  ></el-table-column>
-                    <el-table-column prop="gps_time" label="数据接收时间" ></el-table-column>
+                    <el-table-column prop="insert_time" label="定位时间"></el-table-column>
+                    <el-table-column prop="gps_time" label="数据接收时间"></el-table-column>
                     <!-- <el-table-column prop="name" label="定位状态" width="120"></el-table-column> -->
                     <!-- <el-table-column prop="name" label="空重载状态" width="120" ></el-table-column> -->
-                    <el-table-column prop="gps_oil_level" label="gps油位"  ></el-table-column>
+                    <el-table-column prop="gps_oil_level" label="gps油位"></el-table-column>
                     <!-- <el-table-column prop="name" label="箱外温度(℃)" width="100"></el-table-column> -->
                     <!-- <el-table-column prop="name" label="开关门次数" width="100"></el-table-column> -->
                     <!-- <el-table-column prop="name" label="电量(%)" width="100" ></el-table-column> -->
-                    <el-table-column prop="address" label="当前位置" ></el-table-column>
+                    <el-table-column prop="address" label="当前位置"></el-table-column>
                    <!-- <el-table-column  fixed="right" label="查看详情" width="120">
                         <template slot-scope="scope">
                             <el-button type="primary" size="small">详情</el-button>
@@ -217,9 +222,7 @@ export default {
              /**
              * 温度平均值
              */
-            // var temp = "gps_temp1"+"gps_temp2"+"gps_temp3";
-            // var average = temp/30;
-            // this.$set(this.tableData3[i],'average');
+           
             return item;
             
           });
@@ -260,13 +263,19 @@ export default {
           };
 
           //华氏度转摄氏度 以及平均值
-          for(var i=0;i<this.items.length;i++){
-            console.log(this.items[1].ambient_temp);
-            this.items[i].ambient_temp = (function(t){
-              if (t=='-') return t;
-              t = this.items[i].gps_temp1+this.items[i].gps_temp2+this.items[i].gps_temp3
-            	return parseInt(10*(t - 32)/1.8)/30;
-            })(this.items[i].ambient_temp)
+          for(var o=0;o<this.items.length;o++){
+            var t1 = this.items[o].gps_temp1;
+            var t2 = this.items[o].gps_temp2;
+            var t3 = this.items[o].gps_temp3;
+            this.items[o].ambient_temp = (function(t){
+              // if (t=='-') { t=='0'};
+              if (t1=='-') { t1=='0'};
+              if (t2=='-') { t2=='0'};
+              if (t3=='-') { t3=='0'};
+              t = 't1+t2+t3';
+            	return parseInt(10*(t- 32)/1.8)/30;
+            })(this.items[o].ambient_temp)
+            console.log(this.items[o].ambient_temp)
           };
 
           //方向描述
@@ -311,14 +320,12 @@ export default {
          }
            
 
-          // var conNum_total = 0;
           // var conNum_online = 0;
           // var conNum_offline = 0;
           // var conNum_alarm = 0;
           // var nowTime = new Date().getTime();
           // nowTime = nowTime/1000 - 1200;
           // for(var i = 0;i<this.items.length;i++ ){
-          //     conNum_total++;
           //     if(this.items[i].insert_time > nowTime){
           //         conNum_online ++;
           //     }else{
@@ -338,12 +345,11 @@ export default {
         var marker = new window.BMap.Marker(point);
         this.map.addOverlay(marker);
         var opts = {
-          width: 50, // 信息窗口宽度
+          width: 70, // 信息窗口宽度
           height: 320 // 信息窗口高度
         };
         marker.addEventListener("click", function(e) {
           //获取点的信息
-        //   console.log(marker,e.target);
           var p = e.target;
           var lng = p.getPosition().lng;
           var lat = p.getPosition().lat;
@@ -367,7 +373,6 @@ export default {
       }
     },
     remoteMethod(query) {
-      // console.log("query===",query,this.items);
       if (query !== "") {
         this.loading = true;
         setTimeout(() => {
@@ -403,15 +408,18 @@ export default {
     width:22%;
     margin-top:-80vh;
     margin-right: 1.3%;
+    overflow-y:auto;
+    height:80vh;
     position: relative;
     float: right;
     display:inline;
 }
 .rights{
     width:90%;
-    height:80vh;
     background-color:#fff;
     float:right;
+    /* z-index:99999; */
+    position: relative;
 }
 .change{
     float: right;
@@ -433,9 +441,15 @@ export default {
     line-height: 35px;
     
 } 
-.list{
-  width:100%;
-  height:100%;
-  background-color: aquamarine;
+.list-right{
+  /* width:100%; */
+  height:20px;
+  overflow: hidden;
+  background-color: #fff;
+}
+.list-right img{
+  width:20px;
+  margin-left: 20px;
+  position:absolute;
 }
 </style>

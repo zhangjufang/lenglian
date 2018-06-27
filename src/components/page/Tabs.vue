@@ -161,7 +161,7 @@ export default {
            
           // };
            
-          for(let i = 0;i<this.items.length;i++){
+          for(var i = 0;i<this.items.length;i++){
             this.gps_humi[i] = result[i].gps_humi;
             this.gps_temp1[i]=this.items[i].gps_temp1;
             this.gps_temp2[i]=this.items[i].gps_temp2;

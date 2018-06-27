@@ -26,7 +26,7 @@
               :value="item.name">
           </el-option>
       </el-select>
-       
+       <p style="float:right;margin-right:100px;margin-top:10px;position:relative;">共{{items.length}}条信息</p>
       </div>
       <template >
         <el-table :data="tableData3" border style="width: 96%;margin-top:10px;margin-left:10px;font-size:14px;" height="75vh" class="form" :default-sort = "{prop: 'date', order: 'descending'}">
