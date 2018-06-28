@@ -35,7 +35,7 @@
                 <span slot="title">{{$t('Sidebar.alarm')}}</span>
             </el-menu-item>
             <el-submenu >
-                <template slot="title">
+                <template slot="title" index=" ">
                    <i class="el-icon-sort"></i>
                     <span slot="title">{{$t('Sidebar.travel')}}</span>
                 </template>

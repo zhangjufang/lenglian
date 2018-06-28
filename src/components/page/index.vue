@@ -286,7 +286,6 @@ export default {
                  item[key] =  item[key]/100;
                 } 
               }if(key == "gps_voltage"){
-               
                 item[key] =  item[key]/10;
               }if(key == "cooler_set_temp"){
                 if (item[key] !== "-") {
@@ -317,7 +316,7 @@ export default {
             var gc = new window.BMap.Geocoder();
             gc.getLocation(point, (rs)=>{
               var addComp = rs.addressComponents;
-                this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district);
+                this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district +" "+ addComp.street +" "+ addComp.streetNumber);
                 // item.address = addComp.province + " " + addComp.city + " " + addComp.district;]
             });
              /**
@@ -365,6 +364,14 @@ export default {
             })(this.items[i].gps_time)
           };
 
+          //速度
+          for(var s=0;s<this.items.length;i++){
+            // console.log(this.items[s].speed);
+            this.items[s].speed = (function(s){
+              // var s = s+ "";
+              // return s.substring(0,s.indexOf(".")+3)
+            })(this.items[s].speed)
+          };
         //  //华氏度转摄氏度 以及平均值
         //   for(var o=0;o<this.items.length;o++){
         //     console.log(this.items[o].ambient_temp);

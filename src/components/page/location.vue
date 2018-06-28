@@ -6,7 +6,7 @@
                     <el-breadcrumb-item> 位置</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-            <div class="maptool" style="folat:left;margin-top:-40px;margin-left:10%;padding-bottom:10px;">
+            <div class="maptool" style="folat:left;margin-top:-40px;margin-left:10%;">
                 <el-date-picker
                     v-model="value4"
                     type="datetimerange"
@@ -18,6 +18,7 @@
                     v-model="value"
                     filterable
                     remote
+                    clearable
                     @change="test(value)"
                     reserve-keyword
                     placeholder="请输入设备关键词"
@@ -38,7 +39,7 @@
         
           <div class="icon">
             <div class="rights" v-if="show" >
-                <el-select
+                <!-- <el-select
                     v-model="value"
                     filterable
                     remote
@@ -54,12 +55,12 @@
                         :label="item.name"
                         :value="item.name">
                     </el-option>
-                </el-select>
+                </el-select> -->
                 <!-- <div class="list" > -->
                   <p style="margin-left:20px;margin-top:10px;"> 所有设备({{items.length}})</p>
                   <div class="list-right" v-for="item in tableData3" :key="item.value" :value="item.value">
                     <img src="../images/car.png" alt="">  
-                    <div   class="list" style="margin-top:2px;font-size:13px;float:left;margin-left:15%;">{{item.name}}</div>
+                    <div   class="list" style="margin-top:2px;font-size:13px;float:left;margin-left:18%;">{{item.name}}</div>
                    
                   </div>
                 <!-- </div> -->
@@ -216,7 +217,7 @@ export default {
             var gc = new window.BMap.Geocoder();
             gc.getLocation(point, (rs)=>{
               var addComp = rs.addressComponents;
-                this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district);
+                this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district +" "+ addComp.street +" "+ addComp.streetNumber);
                 // item.address = addComp.province + " " + addComp.city + " " + addComp.district;]
             });
              /**
@@ -396,20 +397,19 @@ export default {
 <style>
 .map {
   clear:both;
-  height: 68vh;
-  
+  height: 73vh;
   border: 1px solid transparent;
   border-radius: 3px;
-  height:80vh;
+  /* height:80vh; */
   width:100%;
   /* border: 1px solid rgb(180, 173, 173); */
 }
 .icon {
     width:22%;
-    margin-top:-80vh;
+    margin-top:-73.1vh;
     margin-right: 1.3%;
     overflow-y:auto;
-    height:80vh;
+    height:73vh;
     position: relative;
     float: right;
     display:inline;
@@ -419,7 +419,7 @@ export default {
     background-color:#fff;
     float:right;
     /* z-index:99999; */
-    position: relative;
+    /* position: relative; */
 }
 .change{
     float: right;
