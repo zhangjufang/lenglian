@@ -28,16 +28,16 @@
             </div>
             <div class="he" style="width:600px;height:30px;display: flex;justify-content: space-between;margin-right:2%;">
                 <div class="box" >{{$t('index.full')}}：{{items.length}}个</div>
-                <div class="box">{{$t('index.on')}}: 个</div>
-                <div class="box">{{$t('index.off')}}: 个</div>
+                <div class="box">{{$t('index.on')}}: {{onlineSize}}个</div>
+                <div class="box">{{$t('index.off')}}: {{offlineSize}}个</div>
                 <div class="box">{{$t('index.alarm')}}: 0 个</div>
             </div> 
         </div>
         <div class="tab" style="display: flex;justify-content: space-between;width:100%;">
             <template>
                 <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" 
-                class="el" height="68vh"  @row-click="openalert()" :default-sort = "{prop: 'date', order: 'descending'}">
-                    <el-table-column fixed prop="name" label="箱体编号" width="100" sortable></el-table-column>
+                class="el" height="68vh"  @row-click="openalert" :default-sort = "{prop: 'date', order: 'descending'}">
+                    <el-table-column fixed prop="name" :label="$t('index.full')"  width="100" sortable></el-table-column>
                     <el-table-column prop="ambient_temp" label="箱内温度°C" width="110" sortable></el-table-column>
                     <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
                     <el-table-column prop="zone_status" label="机组状态" width="75"></el-table-column>
@@ -86,7 +86,7 @@
             </div>
             <div class="lengji" v-show="servicePro1">
                     <div class="lengji1" >
-                        <span>冷机通讯：</span> <br>
+                        <span>冷机通讯：{{detail.address}}</span> <br>
                         <span>冷机电压（V）：</span><br>
                         <span>环境温度(°C)：</span> <br> 
                         <span>环境温度(°C)：</span> <br>
@@ -228,7 +228,10 @@ export default {
       tencent1: false,
       zizhi1: false,
       input:'',
-      look:false
+      look:false,
+      detail:{},
+      onlineSize:0,
+      offlineSize:0
     };
   },
   mounted() {
@@ -518,10 +521,14 @@ export default {
         togglePanel () {
             this.look = false;
         },
-        openalert(){
+        openalert(row){
+          this.detail = row;
           this.look = true;
           // alert(e.target);
-          this.highlight();
+          // this.highlight();
+        },
+        getColName(h,data){
+          console.log(h,data);
         }
   },
   created: function() {},

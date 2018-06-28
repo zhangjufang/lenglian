@@ -45,8 +45,13 @@ router.beforeEach((to, from, next) => {
         }
     }
 })
+/**
+ * 这里从localstorage中获取用户设置的语言选项
+ */
+var lan = localStorage.getItem('i18n');
+lan = lan?lan:'cn';
 const i18n = new VueI18n({
-    locale: 'cn',    // 语言标识
+    locale: lan,    // 语言标识
     messages:{
       cn:cnConf,
       en:enConf

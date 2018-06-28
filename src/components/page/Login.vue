@@ -43,6 +43,19 @@
                 },
             }
         },
+        created(){
+            //这里根据localstorage中的语言初始化radio
+            var lan = localStorage.getItem('i18n');
+            if(lan){
+                if(lan=='cn'){
+                    this.radio = '1';
+                }else{
+                    this.radio = '2';
+                }
+            }else{
+                this.radio = '1';
+            }
+        },
         methods: {
              submitForm(formName) {  
                this.$axios.post('/api/welcome/user_login',this.qs.stringify({userName:this.ruleForm.username,userPassword:this.ruleForm.password})).then((data) =>{
@@ -57,8 +70,8 @@
                 });
             },
             lancheck(lan){
-            console.log(lan);
             this.$i18n.locale=lan;
+            localStorage.setItem('i18n',lan);
             },
         }
     }

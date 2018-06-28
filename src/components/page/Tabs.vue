@@ -10,7 +10,8 @@
             v-model="value"
             filterable
             remote
-            @change="test(value)"
+            @change="confirm"
+            :filter-method="search"
             reserve-keyword
             placeholder="请输入设备关键词"
             :loading="loading" >
@@ -18,7 +19,7 @@
             v-for="item in options"
             :key="item.name"
             :label="item.name"
-            :value="item.name">
+            :value="item.box_id">
             </el-option>    
         </el-select>
         <div style="float:left;margin-left:10%;">
@@ -73,27 +74,47 @@ export default {
       return {
           loading: false,
           tableData3:[],
+          items:[],
           value:'',
           options: [],
           value: '',
-          cooler_voltage: [],
-          ambient_temp:[],
-          re_air_temp:[],
-          out_air_temp:[],
-          cooler_set_temp:[],
-          oil_temp:[],
-          insert_time:[]        
+          insert_time:[],
+          gps_humi: [],
+          gps_temp1:[],
+          gps_temp2:[],
+          gps_temp3:[],
+          gps_oil_level:[],
+          gps_voltage:[],
+          reserve5:[]        
         }
       },
       mounted() {
         this.drawLine();
-        this.getdata();
+        this.getstates();
 			},
   methods: {
-    getdata(){
-      this.$axios.post('/api/d/container_data_json',this.qs.stringify({id:'41803001'}))
+    getstates() {
+      this.$axios
+        .post("/api/d/container_list_json", this.qs.stringify({}))
+        .then(data => {
+             console.log(data.data.result)
+          this.items = data.data.result;
+        });
+    },
+    search(value){
+      this.items.forEach((item)=>{
+        if(item.name.indexOf(value)>-1){
+          this.options.push(item);
+        }
+      })
+    },
+    confirm(value){
+      this.getdata(value)
+    },
+    getdata(id){
+      this.$axios.post('/api/d/container_data_json',this.qs.stringify({id:id}))
       .then(data => {
-        //   console.log(data.data.result);
+          console.log('根据id获取的数据',data.data.result);
           var result = data.data.result.map((item,i) => {
             /**
              * 各种-999转换为-
@@ -142,9 +163,9 @@ export default {
             return item;
           });
           
-          this.items = result;
+          // this.items = result;
           this.tableData3 = result;
-          console.log(this.items);
+          // console.log(this.items);
 
 
           // for(var i=0;i<this.items.length;i++){
@@ -178,15 +199,11 @@ export default {
               
             return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
             + ((da.getDate()< 10 ? '0'+(da.getDate()) : da.getDate()))+ " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
-            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
+            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()): da.getMinutes()))+ ":"
              + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
-             
             })(this.items[i].insert_time) 
             this.insert_time[i]=this.items[i].insert_time;
 
-
-
-            
           };
           
           // console.log(this.insert_time,this.cooler_voltage);

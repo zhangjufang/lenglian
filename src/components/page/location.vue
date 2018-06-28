@@ -168,7 +168,7 @@ export default {
       this.$axios
         .post("/api/d/container_latest_json", this.qs.stringify({}))
         .then(data => {
-          // console.log(data.data.result);
+          console.log(data.data.result);
           var result = data.data.result.map((item,i) => {
             /**
              * 各种-999转换为-
