@@ -32,7 +32,7 @@
                     </el-option>
                 </el-select>
                 <button type="submit" class="btn" id="containerLoader"
-                style="margin-left:20px;border:1px solid #ccc;width:50px;height:30px;background-color: #fff;border-radius: 3px;">查轨迹</button>
+                style="margin-left:25px;border:1px solid #ccc;width:50px;height:30px;background-color: #fff;border-radius: 3px;">查轨迹</button>
             </div>
         </div> 
         <BMap class="map" @returnMap="receiveMap"></BMap>
@@ -60,7 +60,7 @@
                   <p style="margin-left:20px;margin-top:10px;"> 所有设备({{items.length}})</p>
                   <div class="list-right" v-for="item in tableData3" :key="item.value" :value="item.value">
                     <img src="../images/car.png" alt="">  
-                    <div   class="list" style="margin-top:2px;font-size:13px;float:left;margin-left:18%;">{{item.name}}</div>
+                    <div class="list" style="margin-top:2px;font-size:13px;float:left;margin-left:18%;">{{item.name}}</div>
                    
                   </div>
                 <!-- </div> -->
@@ -196,7 +196,11 @@ export default {
                 if (item[key] !== "-") {
                  item[key] =  item[key]/10;
                 } 
-              } else{
+              }if(key == "speed"){
+                if (item[key] !== " ") {
+                 item[key] = Math.round(item[key]*100)/100;
+                } 
+              }else{
                 return;
               }
             });
@@ -233,7 +237,7 @@ export default {
           this.addMarker(this.items);
           
           /**
-           * 时间戳
+           * //时间戳转化成时间格式
            */
           for(var i=0;i<this.items.length;i++){
             // console.log(this.items[i].insert_time);
@@ -246,11 +250,6 @@ export default {
             + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
             + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))       
             })(this.items[i].insert_time)
-           
-          };
-
-          //时间戳转化成时间格式
-          for(var i=0;i<this.items.length;i++){
             // console.log(this.items[1].gps_time);
             this.items[i].gps_time = (function(date){
               date = date*1000;
@@ -262,23 +261,6 @@ export default {
              + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
             })(this.items[i].gps_time)
           };
-
-          //华氏度转摄氏度 以及平均值
-          for(var o=0;o<this.items.length;o++){
-            var t1 = this.items[o].gps_temp1;
-            var t2 = this.items[o].gps_temp2;
-            var t3 = this.items[o].gps_temp3;
-            this.items[o].ambient_temp = (function(t){
-              // if (t=='-') { t=='0'};
-              if (t1=='-') { t1=='0'};
-              if (t2=='-') { t2=='0'};
-              if (t3=='-') { t3=='0'};
-              t = 't1+t2+t3';
-            	return parseInt(10*(t- 32)/1.8)/30;
-            })(this.items[o].ambient_temp)
-            console.log(this.items[o].ambient_temp)
-          };
-
           //方向描述
          for(var j = 0 ;j<this.items.length;j++){ 
           // console.log(this.items[j].reserve6)
@@ -448,7 +430,7 @@ export default {
   background-color: #fff;
 }
 .list-right img{
-  width:20px;
+  width:25px;
   margin-left: 20px;
   position:absolute;
 }

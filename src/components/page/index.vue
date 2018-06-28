@@ -27,10 +27,10 @@
                 </el-select>
             </div>
             <div class="he" style="width:600px;height:30px;display: flex;justify-content: space-between;margin-right:2%;">
-                <div class="box" >{{$t('index.full')}}:&nbsp;&nbsp;&nbsp;&nbsp;{{items.length}}个</div>
-                <div class="box">{{$t('index.on')}}:</div>
-                <div class="box">{{$t('index.off')}}:</div>
-                <div class="box">{{$t('index.alarm')}}:</div>
+                <div class="box" >{{$t('index.full')}}：{{items.length}}个</div>
+                <div class="box">{{$t('index.on')}}: 个</div>
+                <div class="box">{{$t('index.off')}}: 个</div>
+                <div class="box">{{$t('index.alarm')}}: 0 个</div>
             </div> 
         </div>
         <div class="tab" style="display: flex;justify-content: space-between;width:100%;">
@@ -56,12 +56,12 @@
             <template >
                 <el-table :data="tableData3" border style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);" class="table2"  height="11vh"  :default-sort = "{prop: 'date', order: 'descending'}">
                     <el-table-column fixed prop="name" label="箱体编号" width="110" sortable ></el-table-column>
-                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="120" sortable></el-table-column>
+                    <!-- <el-table-column prop="ambient_temp" label="箱内温度°C" width="120" sortable></el-table-column> -->
                     <el-table-column prop="gps_humi" label="箱内湿度%" width="108" sortable></el-table-column>
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
                     <el-table-column prop="cooler_set_temp" label="设定温度°C" width="90"></el-table-column>
                     <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
-                    <el-table-column prop="out_air_temp" label="出风温度°C" width="115" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column>
                     <el-table-column prop="ambient_temp" label="环境温度°C" width="90"></el-table-column>
                     <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
                     <el-table-column prop="gps_voltage" label="副电压" width="85" sortable></el-table-column>
@@ -295,7 +295,11 @@ export default {
                 if (item[key] !== "-") {
                  item[key] =  item[key]/10;
                 } 
-              } else{
+              } if(key == "speed"){
+                if (item[key] !== " ") {
+                 item[key] = Math.round(item[key]*100)/100;
+                } 
+              }else{
                 return;
               }
             });
@@ -334,7 +338,7 @@ export default {
           this.addMarker(this.items);
           
           /**
-           * 时间戳
+           *  //时间戳转化成时间格式
            */
           for(var i=0;i<this.items.length;i++){
             // console.log(this.items[i].insert_time);
@@ -347,41 +351,33 @@ export default {
             + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
             + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))       
             })(this.items[i].insert_time)
-           
-          };
-
-          //时间戳转化成时间格式
-          for(var i=0;i<this.items.length;i++){
-            // console.log(this.items[1].gps_time);
-            this.items[i].gps_time = (function(date){
+           this.items[i].gps_time = (function(date){
               date = date*1000;
               var da = new Date();
               da.setTime(date);
            return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
             + ((da.getDate()< 10 ? '0'+(da.getDate()) : da.getDate()))+ " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
-            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":"
+            + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":" 
              + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
             })(this.items[i].gps_time)
           };
 
-          //速度
-          for(var s=0;s<this.items.length;i++){
-            // console.log(this.items[s].speed);
-            this.items[s].speed = (function(s){
-              // var s = s+ "";
-              // return s.substring(0,s.indexOf(".")+3)
-            })(this.items[s].speed)
-          };
-        //  //华氏度转摄氏度 以及平均值
-        //   for(var o=0;o<this.items.length;o++){
-        //     console.log(this.items[o].ambient_temp);
-        //     this.items[o].ambient_temp = (function(t){
-        //       if (t=='-') return t;
-        //       // t = this.items[i].gps_temp1+this.items[i].gps_temp2+this.items[i].gps_temp3
-        //     	return parseInt(10*((this.items[o].gps_temp1+this.items[o].gps_temp2+this.items[o].gps_temp3)- 32)/1.8)/30;
-        //     })(this.items[o].ambient_temp)
+        //华氏度转摄氏度 以及平均值
+          // for(var o=0;o<this.items.length;o++){
+          //   var t1 = this.items[o].gps_temp1;
+          //   var t2 = this.items[o].gps_temp2;
+          //   var t3 = this.items[o].gps_temp3;
+          //   this.items[o].ambient_temp = (function(t){
+          //     // if (t=='-') { t=='0'};
+          //     if (t1=='-') { t1=='0'};
+          //     if (t2=='-') { t2=='0'};
+          //     if (t3=='-') { t3=='0'};
+          //     t = 't1+t2+t3';
+          //   	return parseInt(10*(t- 32)/1.8)/30;
+          //   })(this.items[o].ambient_temp)
+          //   console.log(this.items[o].ambient_temp)
+          // };)
         //   };
-
           //方向描述
          for(var j = 0 ;j<this.items.length;j++){ 
           // console.log(this.items[j].reserve6)
@@ -423,22 +419,21 @@ export default {
             })(this.items[j].reserve6) 
             // this.reserve6[j]=this.items[j].reserve6;
          }
-           
 
-          // var conNum_total = 0;
-          // var conNum_online = 0;
-          // var conNum_offline = 0;
-          // var conNum_alarm = 0;
-          // var nowTime = new Date().getTime();
-          // nowTime = nowTime/1000 - 1200;
-          // for(var i = 0;i<this.items.length;i++ ){
-          //     conNum_total++;
-          //     if(this.items[i].insert_time > nowTime){
-          //         conNum_online ++;
-          //     }else{
-          //         conNum_offline++;
-          //     }
-          // }
+         //统计在线离线和报警数量
+          var conNum_online = 0;
+          var conNum_offline = 0;
+          var conNum_alarm = 0;
+          var nowTime = new Date().getTime();
+          nowTime = nowTime/1000 - 1200;
+          for(var i = 0;i<this.items.length;i++ ){
+             
+              if(this.items[i].insert_time > nowTime){
+                  conNum_online ++;
+              }else{
+                  conNum_offline++;
+              }
+          }
         });
     },
     addMarker(points) {
@@ -592,11 +587,11 @@ export default {
 }
 .alert-tab{
   position: fixed;
-  z-index:9999;
+  z-index:999;
   width:60%;
   border:1px solid gray;
   height:70%;
-  margin-top:-38%;
+  margin-top:-40%;
   margin-left:15%;
   background-color:#fff;
   border-radius: 8px;

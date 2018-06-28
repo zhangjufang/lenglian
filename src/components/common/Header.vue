@@ -325,7 +325,7 @@
     }
     .user{
         position: fixed;
-        z-index:999;
+        z-index:9999;
         width:45%;
         border:1px solid gray;
         height:65vh;
@@ -351,7 +351,7 @@
     }
     .chan{
         position: fixed;
-        z-index:999;
+        z-index:9999;
         width:45%;
         border:1px solid gray;
         height:60vh;

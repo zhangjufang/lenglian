@@ -11,7 +11,7 @@
       <div>
         <el-select
           v-model="value"
-          
+          clearable
           filterable
           remote
           @change="test(value)"

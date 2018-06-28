@@ -6,21 +6,23 @@
             <el-breadcrumb-item>箱体 </el-breadcrumb-item>
         </el-breadcrumb>
         <div style="height: 32px;float：left;margin-left:20px;">
-            <el-select
-            v-model="value"
-            filterable
-            remote
-            @change="test(value)"
-            reserve-keyword
-            placeholder="请输入设备关键词"
-            :loading="loading" >
-            <el-option
-            v-for="item in options"
-            :key="item.name"
-            :label="item.name"
-            :value="item.name">
-            </el-option>    
-        </el-select>
+           <el-select
+                    v-model="value"
+                    filterable
+                    remote
+                    clearable
+                    @change="test(value)"
+                    reserve-keyword
+                    placeholder="请输入设备关键词"
+                    :remote-method="remoteMethod"
+                    :loading="loading">
+                        <el-option
+                        v-for="item in options"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.name">
+                    </el-option>
+                </el-select>
         <div style="float:left;margin-left:10%;">
           <span class="demonstration">起止时间：</span>
           <el-date-picker
@@ -83,10 +85,23 @@ export default {
       mounted() {
         this.drawLine();
         this.getdata();
+        
 			},
   methods: {
+
+    test(value) {
+     this.tableData3 = this.items.filter((item,index) => {
+        if(value.indexOf(item.name) > -1){
+            // console.log(this.markers,this.markers[index]);
+            this.markers[index].V.click();
+            return true;
+        }else{
+            return false;
+        }
+      });
+    },
     getdata(){
-      this.$axios.post('/api/d/container_data_json',this.qs.stringify({id:'41803001'}))
+      this.$axios.post('/api/d/container_data_json',this.qs.stringify({id:'21711014'}))
       .then(data => {
         //   console.log(data.data.result);
           var result = data.data.result.map((item,i) => {
@@ -197,7 +212,6 @@ export default {
                   realtime: true,
                   start: 50,
                   end: 85,
-                  
               }
           ],
             legend:{
@@ -238,7 +252,7 @@ export default {
             {
                 name: '环境',
                 type: 'line',
-                data: [1,2,3,4,5]
+                data: that.ambient_temp
             },
             {
                 name: '回风',
@@ -262,26 +276,24 @@ export default {
             }
             ]
         }
-        // console.log('data==' ,options.series[0].data.length);
-        // 绘制图表
         myChart.setOption(options);
     }
   
   },
-  // remoteMethod(query) {
-  //     // console.log("query===",query,this.items);
-  //     if (query !== "") {
-  //       this.loading = true;
-  //       setTimeout(() => {
-  //         this.loading = false;
-  //         this.options = this.items.filter(item => {
-  //           return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
-  //         });
-  //       }, 200);
-  //     } else {
-  //       this.options = [];
-  //     }
-  //   },
+  remoteMethod(query) {
+      // console.log("query===",query,this.items);
+      if (query !== "") {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.options = this.items.filter(item => {
+            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          });
+        }, 200);
+      } else {
+        this.options = [];
+      }
+    },
 }
 </script>
 
