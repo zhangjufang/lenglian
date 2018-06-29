@@ -41,23 +41,19 @@
     <div class="grid">
             <template >
                 <el-table :data="tableData3" border style="width:90%;margin-left:30px;text-color:#000;border:1px solid rgb(180, 173, 173);font-size:12px;"  height="50vh"  :default-sort = "{prop: 'date', order: 'descending'}">
-                    <el-table-column fixed prop="name" label="箱体编号" width="120" sortable ></el-table-column>
-                    <el-table-column prop="gps_humi" label="湿度" width="90" sortable></el-table-column>
-                    <el-table-column prop="gps_temp1" label="温度1" width="75"></el-table-column>
+                    <el-table-column fixed prop="name" label="箱体编号" width="100"  ></el-table-column>
+                    <el-table-column prop="gps_humi" label="湿度" width="70" ></el-table-column>
+                    <el-table-column prop="gps_temp1" label="温度1" width="70"></el-table-column>
                     <el-table-column prop="gps_temp2" label="温度2" width="75"></el-table-column>
                     <el-table-column prop="gps_temp3" label="温度3" width="75"></el-table-column>
                     <el-table-column prop="gps_oil_level" label="油位%" width="75"></el-table-column>
                     <el-table-column prop="reserve5" label="CO2 ppm" width="80"></el-table-column>
-                    <el-table-column prop="cooler_voltage" label="电压" width="90" sortable></el-table-column>
+                    <el-table-column prop="cooler_voltage" label="电压" width="90" ></el-table-column>
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
                     <el-table-column prop="speed" label="速度 km/h" width="100"></el-table-column>
-                    <el-table-column prop="reserve6" label="方向" width="100" sortable></el-table-column>
-                    <el-table-column prop="re_air_temp" label="回风温度" width="100" sortable></el-table-column>
+                    <el-table-column prop="reserve6" label="方向" width="100" ></el-table-column>
+                    <el-table-column prop="re_air_temp" label="回风温度" width="100" ></el-table-column>
                     <el-table-column prop="out_air_temp" label="送风温度" width="84"></el-table-column>
-                    <!-- <el-table-column prop="cooler_set_temp" label="设定温度" width="75"></el-table-column> -->
-                    <!-- <el-table-column prop="oil_temp" label="盘发器盘管温度" width="150" sortable></el-table-column> -->
-                    <!-- <el-table-column prop="zone_alarm_code" label="告警吗" width="80"></el-table-column> -->
-                    <!-- <el-table-column prop="zone_status" label="主机状态" width="90"></el-table-column> -->
                     <el-table-column prop="zone_status" label="冷机状态" width="180"></el-table-column>
                     <el-table-column prop="insert_time" label="时间" ></el-table-column>
                 </el-table>
@@ -97,7 +93,7 @@ export default {
       this.$axios
         .post("/api/d/container_list_json", this.qs.stringify({}))
         .then(data => {
-             console.log(data.data.result)
+            //  console.log(data.data.result)
           this.items = data.data.result;
         });
     },
@@ -142,7 +138,9 @@ export default {
                 } 
               } 
               if (key == "re_air_temp") {  
-                item[key] = item[key]/10;
+                 if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
               }
               if (key == "gps_temp1") {  
                 item[key] = item[key]/10;
@@ -155,6 +153,10 @@ export default {
               } 
               if (key == "cooler_set_temp") {  
                 item[key] = item[key]/10;
+              }if(key == "speed"){
+                if (item[key] !== " ") {
+                 item[key] = Math.round(item[key]*100)/100;
+                } 
               }
               else{
                 return;
@@ -163,35 +165,21 @@ export default {
             return item;
           });
           
-          // this.items = result;
+          this.items = result;
           this.tableData3 = result;
-          // console.log(this.items);
-
-
-          // for(var i=0;i<this.items.length;i++){
-          //   // console.log(this.items[1].insert_time);
-          //   this.items[i].insert_time = (function(date){
-          //     date = date*1000;
-          //     var da = new Date();
-          //     da.setTime(date);
-          //   return da.getFullYear() + "-" + ((da.getMonth()+1 < 10 ? '0'+(da.getMonth()+1) : da.getMonth()+1)) + "-" 
-          //   + da.getDate() + " " + ((da.getHours()< 10 ? '0'+(da.getHours()) : da.getHours()))  + ":" 
-          //   + ((da.getMinutes()< 10 ? '0'+(da.getMinutes()) : da.getMinutes()))+ ":" + da.getMinutes() 
-              
-          //   })(this.items[i].insert_time)
-           
-          // };
+          // console.log(this.items)
            
           for(var i = 0;i<this.items.length;i++){
-            this.gps_humi[i] = result[i].gps_humi;
+            this.gps_humi[i] = this.items[i].gps_humi;
+            console.log(this.gps_humi[i])
             this.gps_temp1[i]=this.items[i].gps_temp1;
             this.gps_temp2[i]=this.items[i].gps_temp2;
             this.gps_temp3[i]=this.items[i].gps_temp3;
             this.gps_oil_level[i]=this.items[i].gps_oil_level;
             this.gps_voltage[i]=this.items[i].gps_voltage;
             this.reserve5[i]=this.items[i].reserve5;
-            // console.log(this.items[i].out_air_temp);
-
+            // console.log(this.items[i].insert_time);
+              
            this.items[i].insert_time = (function(date){
               date = date*1000;
               var da = new Date();
@@ -203,9 +191,49 @@ export default {
              + ((da.getSeconds()< 10 ? '0'+(da.getSeconds()) : da.getSeconds()))
             })(this.items[i].insert_time) 
             this.insert_time[i]=this.items[i].insert_time;
-
+            // console.log(this.insert_time[2])
           };
-          
+           for(var j = 0 ;j<this.items.length;j++){ 
+          // console.log(this.items[j].reserve6)
+            this.items[j].reserve6 = (function(angle){
+              if(angle < 0){return '-';}
+                      var modulo = parseInt(angle/45);
+                      var remainder = angle - modulo*45;
+                      remainder = parseInt(remainder*10)/10;
+                      var direction = '-';
+                      switch(modulo){
+                        case 0://北偏东
+                          direction = remainder > 0 ?'北偏东'+ remainder +'度':'正北';
+                          break;
+                        case 1://东偏北
+                          direction = '东偏北'+ (45 - remainder) +'度';
+                          break;
+                        case 2://东偏南
+                          direction = remainder > 0 ?'东偏南'+ remainder +'度':'正东';
+                          break;
+                        case 3://南偏东
+                          direction = '南偏东'+ (45 - remainder) +'度';
+                          break;
+                        case 4://南偏西
+                          direction = remainder > 0 ?'南偏西'+ remainder +'度':'正南';
+                          break;
+                        case 5://西偏南
+                          direction = '西偏南'+ (45 - remainder) +'度';
+                          break;
+                        case 6://西偏北
+                          direction = remainder > 0 ?'西偏北'+ remainder +'度':'正西';
+                          break;
+                        case 7://西偏北
+                          direction = '西偏北'+ (45 - remainder) +'度';
+                          break;
+                          
+                  }
+                return direction;
+             
+            })(this.items[j].reserve6) 
+            // this.reserve6[j]=this.items[j].reserve6;
+         }
+
           // console.log(this.insert_time,this.cooler_voltage);
           this.drawLine();
         });

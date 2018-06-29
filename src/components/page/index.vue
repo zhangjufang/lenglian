@@ -28,8 +28,8 @@
             </div>
             <div class="he" style="width:600px;height:30px;display: flex;justify-content: space-between;margin-right:2%;">
                 <div class="box" >{{$t('index.full')}}：{{items.length}}个</div>
-                <div class="box">{{$t('index.on')}}: {{onlineSize}}个</div>
-                <div class="box">{{$t('index.off')}}: {{offlineSize}}个</div>
+                <div class="box">{{$t('index.on')}}: {{online}}个</div>
+                <div class="box">{{$t('index.off')}}: {{offline}}个</div>
                 <div class="box">{{$t('index.alarm')}}: 0 个</div>
             </div> 
         </div>
@@ -37,17 +37,17 @@
             <template>
                 <el-table :data="tableData3" border  style="width:35%;margin-top:20px;border:1px solid rgb(180, 173, 173);font-size:10px;" 
                 class="el" height="68vh"  @row-click="openalert" :default-sort = "{prop: 'date', order: 'descending'}">
-                    <el-table-column fixed prop="name" :label="$t('index.full')"  width="100" sortable></el-table-column>
-                    <el-table-column prop="ambient_temp" label="箱内温度°C" width="110" sortable></el-table-column>
-                    <el-table-column prop="gps_humi" label="箱内湿度%" width="110" sortable></el-table-column>
-                    <el-table-column prop="zone_status" label="机组状态" width="75"></el-table-column>
-                    <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
+                    <el-table-column fixed prop="name" :label="$t('index.con')"  width="100" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" :label="$t('index.temp')" width="110" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" :label="$t('index.humi')" width="110" sortable></el-table-column>
+                    <el-table-column prop="zone_status" :label="$t('index.cooler')" width="75"></el-table-column>
+                    <el-table-column prop="cooler_voltage" :label="$t('index.cooler_voltage')" width="75"></el-table-column>
                     <!-- <el-table-column prop="cooler_set_temp" label="设定温度°C" width="100"></el-table-column> -->
 
                     <!-- <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
                     <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column> -->
                     <!-- <el-table-column prop="ambient_temp" label="环境温度°C" width="84"></el-table-column> -->
-                    <el-table-column prop="insert_time" label="更新时间" ></el-table-column>
+                    <el-table-column prop="insert_time" :label="$t('index.time')"  ></el-table-column>
                 </el-table>
             </template>
            <BMap class="mapstyle" @returnMap="receiveMap"></BMap>
@@ -55,118 +55,118 @@
         <div class="grid">
             <template >
                 <el-table :data="tableData3" border style="width:100%;margin-top:20px;text-color:#000;border:1px solid rgb(180, 173, 173);" class="table2"  height="11vh"  :default-sort = "{prop: 'date', order: 'descending'}">
-                    <el-table-column fixed prop="name" label="箱体编号" width="110" sortable ></el-table-column>
+                    <el-table-column fixed prop="name":label="$t('index.con')"  width="110" sortable ></el-table-column>
                     <!-- <el-table-column prop="ambient_temp" label="箱内温度°C" width="120" sortable></el-table-column> -->
-                    <el-table-column prop="gps_humi" label="箱内湿度%" width="108" sortable></el-table-column>
+                    <el-table-column prop="gps_humi" :label="$t('index.humi')"  width="108" sortable></el-table-column>
                     <!-- <el-table-column prop="zone_status" label="机组状态" width="150"></el-table-column> -->
-                    <el-table-column prop="cooler_set_temp" label="设定温度°C" width="90"></el-table-column>
-                    <el-table-column prop="re_air_temp" label="回风温度°C" width="110" sortable></el-table-column>
-                    <el-table-column prop="out_air_temp" label="出风温度°C" width="110" sortable></el-table-column>
-                    <el-table-column prop="ambient_temp" label="环境温度°C" width="90"></el-table-column>
-                    <el-table-column prop="cooler_voltage" label="冷机电压" width="75"></el-table-column>
-                    <el-table-column prop="gps_voltage" label="副电压" width="85" sortable></el-table-column>
-                    <el-table-column prop="current" label="机组电流" width="75"></el-table-column>
-                    <el-table-column prop="water_temp" label="机组水温°C" width="88"></el-table-column>
-                    <el-table-column prop="suction_press" label="吸气压力" width="75"></el-table-column>
-                    <el-table-column prop="discharge_press" label="排气压力" width="75"></el-table-column>
-                    <el-table-column prop="insert_time" label="更新时间" width="145"  sortable></el-table-column>
-                    <el-table-column prop="address" label="地址"></el-table-column>
+                    <el-table-column prop="cooler_set_temp" :label="$t('index.settemp')" width="90"></el-table-column>
+                    <el-table-column prop="re_air_temp" :label="$t('index.retemp')" width="110" sortable></el-table-column>
+                    <el-table-column prop="out_air_temp" :label="$t('index.outtemp')" width="110" sortable></el-table-column>
+                    <el-table-column prop="ambient_temp" :label="$t('index.ambient')" width="90"></el-table-column>
+                    <el-table-column prop="cooler_voltage" :label="$t('index.cooler_voltage')"  width="75"></el-table-column>
+                    <el-table-column prop="gps_voltage" :label="$t('index.dep')" width="85" sortable></el-table-column>
+                    <el-table-column prop="current" :label="$t('index.cur')" width="75"></el-table-column>
+                    <el-table-column prop="water_temp" :label="$t('index.water')" width="88"></el-table-column>
+                    <el-table-column prop="suction_press" :label="$t('index.suc')" width="75"></el-table-column>
+                    <el-table-column prop="discharge_press" :label="$t('index.ex')" width="75"></el-table-column>
+                    <el-table-column prop="insert_time" :label="$t('index.time')" width="145"  sortable></el-table-column>
+                    <el-table-column prop="address" :label="$t('index.address')"></el-table-column>
                 </el-table>
             </template>
         </div>
         <div class="alert-tab"  v-show="look" ref="main">
           <div style=" z-index:999;margin-left:50px;margin-top:20px;">
-            <span>箱体编号：</span><span>DTU编号：</span>
+            <span>{{$t('index.Container')}}：{{detail.name}}&nbsp;&nbsp;&nbsp;</span><span>{{$t('index.DTU')}}：{{detail.box_id}}</span>
             <el-button style="float:right;margin-right:20px;padding:5px 6px;" @click="togglePanel">关闭</el-button>
           </div>
             <div class="tittl" style="font-size:18px;">
-                <div style="width：10%；border-right：1px solid rgb(83, 163, 233);"><p @click="servicePro">冷机</p></div>
-                <p @click="tencent">传感器</p>
-                <p @click="zizhi">控制</p>
+                <div style="width：10%；border-right：1px solid rgb(83, 163, 233);"><p @click="servicePro">{{$t('index.Cooler')}}</p></div>
+                <p @click="tencent">{{$t('index.Sensor')}}</p>
+                <p @click="zizhi">{{$t('index.Command')}}</p>
             </div>
             <div class="lengji" v-show="servicePro1">
                     <div class="lengji1" >
                         <span>冷机通讯：{{detail.address}}</span> <br>
-                        <span>冷机电压（V）：</span><br>
-                        <span>环境温度(°C)：</span> <br> 
-                        <span>环境温度(°C)：</span> <br>
-                        <span>环境温度(°C)：</span> <br>
-                        <span>出风温度(°C)：</span> <br>
-                        <span>蒸发器盘管温度(°C):</span> <br>
+                        <span>{{$t('index.cooler_voltage')}}（V）：{{detail.cooler_voltage}}</span><br>
+                        <span>{{$t('index.ambient')}}(°C)：{{detail.ambient_temp}}</span> <br> 
+                        <span>{{$t('index.settemp')}}：{{detail.cooler_set_temp}}</span> <br>
+                        <span>{{$t('index.retemp')}}：{{detail.re_air_temp}}</span> <br>
+                        <span>{{$t('index.outtemp')}}：{{detail.out_air_temp}}</span> <br>
+                        <span>{{$t('index.oil')}}(°C):{{detail.oil_temp}}</span><br>
                     </div>
                      <div class="lengji1" >
-                        <span>状态信息有效：</span> <br>
-                        <span>软件版本：</span> <br>
-                        <span>备电运行时间(h)：</span> <br>
-                        <span>总工作时间(h)：</span> <br>
-                        <span>引擎工作时间(h)：</span> <br>
-                        <span>告警码：</span> <br>
+                        <span>{{$t('index.zone')}}：{{detail.zone_status}}</span> <br>
+                        <span>{{$t('index.state')}}：{{detail.Software}}</span> <br>
+                        <span>{{$t('index.soft')}}：{{detail.power_on_hour}}</span> <br>
+                        <span>{{$t('index.run')}}：{{detail.work_hour/100}}</span> <br>
+                        <span>{{$t('index.work')}}：{{detail.engine_hour/100}}</span> <br>
+                        <span>{{$t('index.Alarmcode')}}：{{detail.zone_alarm_code}}</span> <br>
                     </div>
              
             </div>
               <div class="lengji" v-show="tencent1">
                 <div class="lengji1" >
-                        <span>湿度(%)：</span> <br>
-                        <span>温度1(°C)：</span><br>
-                        <span>温度2(°C)：</span> <br> 
-                        <span>温度3(°C)：</span> <br>
-                        <span>平均温度(°C)：</span> <br>
-                        <span>CO2(ppm)：</span> <br>
-                        <span>蒸发器盘管温度(°C):</span> <br>
+                        <span>{{$t('index.humi')}}：{{detail.gps_humi}}</span> <br>
+                        <span>{{$t('index.temp1')}}(°C)：{{detail.gps_temp1/10}}</span><br>
+                        <span>{{$t('index.temp2')}}(°C)：{{detail.gps_temp2/10}}</span> <br> 
+                        <span>{{$t('index.temp3')}}(°C)：{{detail.gps_temp3/10}}</span> <br>
+                        <span>{{$t('index.Averagetemp')}}(°C)：{{detail.ambient_temp}}</span> <br>
+                        <span>CO2(ppm)：{{detail.Reserve5}}</span> <br>
+                        <!-- <span>蒸发器盘管温度(°C):{{detail.re_air_temp}}</span> <br> -->
                     </div>
                      <div class="lengji1" >
-                        <span>电压(V)：</span> <br>
-                        <span>油位(%)：</span> <br>
-                        <span>速度(Km/h)：</span> <br>
-                        <span>方向(度)：</span> <br>
-                        <span>经纬度：</span> <br>
-                        <span>门状态：</span> <br>
+                        <span>{{$t('index.cooler_voltage')}}(V)：{{detail.cooler_voltage}}</span> <br>
+                        <span>{{$t('index.level')}}(%)：{{detail.gps_oil_level}}</span> <br>
+                        <span>{{$t('index.speed')}}(Km/h)：{{detail.speed}}</span> <br>
+                        <span>{{$t('index.dir')}}：{{detail.Reserve5}}</span> <br>
+                        <span>{{$t('index.lat')}}：{{detail.longitude}}|{{detail.latitude}}</span> <br>
+                        <span>{{$t('index.door')}}：{{detail.gps_door1}}</span> <br>
                     </div>
              
             
             </div>
             <div class="kongzhi" v-show="zizhi1">
                 <div class="kongzhi">
-                  <b  style="float:left;">机组开关:</b>
+                  <b  style="float:left;">{{$t('index.CoolerOpen')}}:</b>
                   <span style="margin-left:70px;">
-                    <el-button type="primary">开启机组</el-button>
-                    <el-button type="danger">关闭机组</el-button>
+                    <el-button type="primary">{{$t('index.start')}}</el-button>
+                    <el-button type="danger">{{$t('index.stop')}}</el-button>
                   </span>
-                  <span style="margin-left:20px;margin-top:10px;">最近一次操作：      时间：</span>
+                  <span style="margin-left:20px;margin-top:10px;"> {{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</span>
                 </div>
                 <div class="kongzhi1">
-                  <b  style="float:left;">设置温度(°C)：</b>
+                  <b  style="float:left;">{{$t('index.settemp')}}(°C)：</b>
                   <span style="margin-left:30px;">
                   <el-input v-model="input" style="width:120px" placeholder="请输入内容"></el-input>
-                    <el-button type="primary">设置</el-button>
+                    <el-button type="primary">{{$t('index.set')}}</el-button>
                   </span>
-                  <span style="margin-left:20px;margin-top:10px;">最近一次操作：      时间：</span>
+                  <span style="margin-left:20px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</span>
                 </div>
                 <div class="kongzhi1">
-                  <b  style="float:left;">清除报警：</b>
+                  <b  style="float:left;">{{$t('index.Clearalarm')}}：</b>
                   <span style="margin-left:60px;">
                   
-                    <el-button type="primary">清除报警</el-button>
+                    <el-button type="primary">{{$t('index.Clear')}}</el-button>
                   </span>
-                  <span style="margin-left:20px;margin-top:10px;">最近一次操作：清除报警      时间：</span>
+                  <span style="margin-left:20px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</span>
                 </div>
                 <div class="kongzhi1">
-                  <b  style="float:left;">除霜：</b>
+                  <b  style="float:left;">{{$t('index.Defrost')}}：</b>
                   <span style="margin-left:93px;">
                   
-                    <el-button type="primary">初始化除霜</el-button>
+                    <el-button type="primary">{{$t('index.init')}}</el-button>
                   </span>
                 </div>
                 <div class="kongzhi1">
-                  <b  style="float:left;">工作模式：</b>
+                  <b  style="float:left;">{{$t('index.mode')}}：</b>
                   <span style="margin-left:60px;">
-                  <el-button >连续模式</el-button>
-                    <el-button type="primary">循环模式</el-button>
+                  <el-button >{{$t('index.contin')}}</el-button>
+                    <el-button type="primary">{{$t('index.cycle')}}</el-button>
                   </span>
-                  <div style="margin-left:140px;margin-top:10px;">最近一次操作：设置cs模式为      时间：</div>
+                  <div style="margin-left:140px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</div>
                 </div>
                 <div class="kongzhi1">
-                  <b  style="float:left;">新风门开关：</b>
+                  <b  style="float:left;">{{$t('index.airdoor')}}：</b>
                   <span style="margin-left:45px;">
                   <el-select v-model="value1" placeholder="请选择" style="width:120px;z-index:999999">
                       <el-option
@@ -177,10 +177,10 @@
                       </el-option>
                     </el-select>
 
-                    <el-button type="primary">设置新风</el-button>
-                     <el-button type="danger">关闭新风</el-button>
+                    <el-button type="primary">{{$t('index.setfte')}}</el-button>
+                     <!-- <el-button type="danger">关闭新风</el-button> -->
                   </span>
-                  <div  style="margin-left:140px;margin-top:10px;">最近一次操作：     时间：</div>
+                  <div  style="margin-left:140px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</div>
                 </div>
           </div>
     </div>
@@ -230,8 +230,8 @@ export default {
       input:'',
       look:false,
       detail:{},
-      onlineSize:0,
-      offlineSize:0
+      online:'',
+      offline:''
     };
   },
   mounted() {
@@ -326,6 +326,8 @@ export default {
                 this.$set(this.tableData3[i],'address',addComp.province + " " + addComp.city + " " + addComp.district +" "+ addComp.street +" "+ addComp.streetNumber);
                 // item.address = addComp.province + " " + addComp.city + " " + addComp.district;]
             });
+
+            
              /**
              * 温度平均值
              */
@@ -339,7 +341,23 @@ export default {
           this.items = result;
           this.tableData3 = result;
           this.addMarker(this.items);
-          
+          //统计在线离线和报警数量
+              var online = 0;
+              var offline = 0;
+              var nowTime = new Date().getTime();
+              nowTime = nowTime/1000 - 1200;
+              // console.log(nowTime)
+              for(var i = 0;i<this.items.length;i++ ){
+                  if(this.items[i].insert_time > nowTime){
+                      online ++;
+                      this.online=online;
+                      console.log(online)  //26
+                  }else{
+                      offline++;
+                      this.offline=offline;
+                      console.log(offline)  //38
+                  }
+              };
           /**
            *  //时间戳转化成时间格式
            */
@@ -423,20 +441,7 @@ export default {
             // this.reserve6[j]=this.items[j].reserve6;
          }
 
-         //统计在线离线和报警数量
-          var conNum_online = 0;
-          var conNum_offline = 0;
-          var conNum_alarm = 0;
-          var nowTime = new Date().getTime();
-          nowTime = nowTime/1000 - 1200;
-          for(var i = 0;i<this.items.length;i++ ){
-             
-              if(this.items[i].insert_time > nowTime){
-                  conNum_online ++;
-              }else{
-                  conNum_offline++;
-              }
-          }
+         
         });
     },
     addMarker(points) {
@@ -595,7 +600,7 @@ export default {
 .alert-tab{
   position: fixed;
   z-index:999;
-  width:60%;
+  width:55%;
   border:1px solid gray;
   height:70%;
   margin-top:-40%;
@@ -613,18 +618,20 @@ export default {
     color:black;
 }
 .lengji{
+  
     display: flex;
     justify-content: space-between;
     margin-top:60px;
 }
 .lengji span{
+    
     display: flex;
     justify-content: space-between;
     margin-top:12px;
-    margin-left:50px;
+    margin-left:70px;
 }
 .lengji1 {
-    width:400px;
+    width:600px;
 }
 .kongzhi{
    margin-top:10%;
