@@ -25,7 +25,7 @@
         <div style="float:left;margin-left:10%;">
           <span class="demonstration">起止时间：</span>
           <el-date-picker
-            v-model="value"
+            v-model="value1"
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -73,7 +73,7 @@ export default {
           items:[],
           value:'',
           options: [],
-          value: '',
+          value1: '',
           insert_time:[],
           gps_humi: [],
           gps_temp1:[],
@@ -142,20 +142,24 @@ export default {
                  item[key] =  item[key]/10;
                 } 
               }
-              if (key == "gps_temp1") {  
-                item[key] = item[key]/10;
-              }  
-              if (key == "gps_temp2") {  
-                item[key] = item[key]/10;
-              } 
-              if (key == "gps_temp3") {  
-                item[key] = item[key]/10;
-              } 
+              
               if (key == "cooler_set_temp") {  
                 item[key] = item[key]/10;
               }if(key == "speed"){
                 if (item[key] !== " ") {
                  item[key] = Math.round(item[key]*100)/100;
+                } 
+              }if(key == "gps_temp1"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
+              } if(key == "gps_temp2"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
+              } if(key == "gps_temp3"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
                 } 
               }
               else{

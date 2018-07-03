@@ -80,19 +80,20 @@
             <el-button style="float:right;margin-right:20px;padding:5px 6px;" @click="togglePanel">关闭</el-button>
           </div>
             <div class="tittl" style="font-size:18px;">
-                <div style="width：10%；border-right：1px solid rgb(83, 163, 233);"><p @click="servicePro">{{$t('index.Cooler')}}</p></div>
-                <p @click="tencent">{{$t('index.Sensor')}}</p>
-                <p @click="zizhi">{{$t('index.Command')}}</p>
+                <div class="dianji" style="width：10%；border-right：1px solid rgb(83, 163, 233);">
+                <p @click="servicePro" >{{$t('index.Cooler')}}</p></div>
+                <div><p @click="tencent">{{$t('index.Sensor')}}</p></div>
+                <div><p @click="zizhi">{{$t('index.Command')}}</p></div>
             </div>
             <div class="lengji" v-show="servicePro1">
                     <div class="lengji1" >
-                        <span>冷机通讯：{{detail.address}}</span> <br>
+                        <span>{{$t('index.cooleronline')}}：{{items.flag_stop}}</span> <br>
                         <span>{{$t('index.cooler_voltage')}}（V）：{{detail.cooler_voltage}}</span><br>
                         <span>{{$t('index.ambient')}}(°C)：{{detail.ambient_temp}}</span> <br> 
                         <span>{{$t('index.settemp')}}：{{detail.cooler_set_temp}}</span> <br>
                         <span>{{$t('index.retemp')}}：{{detail.re_air_temp}}</span> <br>
                         <span>{{$t('index.outtemp')}}：{{detail.out_air_temp}}</span> <br>
-                        <span>{{$t('index.oil')}}(°C):{{detail.oil_temp}}</span><br>
+                        <span>{{$t('index.oli')}}(°C):{{detail.oil_temp}}</span><br>
                     </div>
                      <div class="lengji1" >
                         <span>{{$t('index.zone')}}：{{detail.zone_status}}</span> <br>
@@ -107,9 +108,9 @@
               <div class="lengji" v-show="tencent1">
                 <div class="lengji1" >
                         <span>{{$t('index.humi')}}：{{detail.gps_humi}}</span> <br>
-                        <span>{{$t('index.temp1')}}(°C)：{{detail.gps_temp1/10}}</span><br>
-                        <span>{{$t('index.temp2')}}(°C)：{{detail.gps_temp2/10}}</span> <br> 
-                        <span>{{$t('index.temp3')}}(°C)：{{detail.gps_temp3/10}}</span> <br>
+                        <span>{{$t('index.temp1')}}(°C)：{{detail.gps_temp1}}</span><br>
+                        <span>{{$t('index.temp2')}}(°C)：{{detail.gps_temp2}}</span> <br> 
+                        <span>{{$t('index.temp3')}}(°C)：{{detail.gps_temp3}}</span> <br>
                         <span>{{$t('index.Averagetemp')}}(°C)：{{detail.ambient_temp}}</span> <br>
                         <span>CO2(ppm)：{{detail.Reserve5}}</span> <br>
                         <!-- <span>蒸发器盘管温度(°C):{{detail.re_air_temp}}</span> <br> -->
@@ -118,7 +119,7 @@
                         <span>{{$t('index.cooler_voltage')}}(V)：{{detail.cooler_voltage}}</span> <br>
                         <span>{{$t('index.level')}}(%)：{{detail.gps_oil_level}}</span> <br>
                         <span>{{$t('index.speed')}}(Km/h)：{{detail.speed}}</span> <br>
-                        <span>{{$t('index.dir')}}：{{detail.Reserve5}}</span> <br>
+                        <span>{{$t('index.dir')}}：{{detail.Reserve6}}</span> <br>
                         <span>{{$t('index.lat')}}：{{detail.longitude}}|{{detail.latitude}}</span> <br>
                         <span>{{$t('index.door')}}：{{detail.gps_door1}}</span> <br>
                     </div>
@@ -132,7 +133,7 @@
                     <el-button type="primary">{{$t('index.start')}}</el-button>
                     <el-button type="danger">{{$t('index.stop')}}</el-button>
                   </span>
-                  <span style="margin-left:20px;margin-top:10px;"> {{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</span>
+                  <div style="margin-left:140px;margin-top:10px;"> {{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</div>
                 </div>
                 <div class="kongzhi1">
                   <b  style="float:left;">{{$t('index.settemp')}}(°C)：</b>
@@ -140,7 +141,7 @@
                   <el-input v-model="input" style="width:120px" placeholder="请输入内容"></el-input>
                     <el-button type="primary">{{$t('index.set')}}</el-button>
                   </span>
-                  <span style="margin-left:20px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</span>
+                  <div style="margin-left:140px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</div>
                 </div>
                 <div class="kongzhi1">
                   <b  style="float:left;">{{$t('index.Clearalarm')}}：</b>
@@ -148,7 +149,7 @@
                   
                     <el-button type="primary">{{$t('index.Clear')}}</el-button>
                   </span>
-                  <span style="margin-left:20px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</span>
+                  <div style="margin-left:140px;margin-top:10px;">{{$t('index.Currentoption')}}：      {{$t('index.Currentoption')}}：</div>
                 </div>
                 <div class="kongzhi1">
                   <b  style="float:left;">{{$t('index.Defrost')}}：</b>
@@ -264,6 +265,14 @@ export default {
         .then(data => {
             //  console.log(data)
           this.items = data.data.result;
+          for(var p=0;p<this.items.length;p++){
+              // console.log(this.items[p].flag_stop)
+              if(this.items[p].flag_stop=="0"){
+                this.items[p].flag_stop=="正常"
+              }if(this.items[p].flag_stop=="1"){
+                this.items[p].flag_stop=="通讯异常，当前冷机数据无效"
+              }
+          }
         });
     },
     //设备列表
@@ -298,11 +307,32 @@ export default {
                 if (item[key] !== "-") {
                  item[key] =  item[key]/10;
                 } 
+              }if(key == "gps_temp1"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
+              } if(key == "gps_temp2"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
+              } if(key == "gps_temp3"){
+                if (item[key] !== "-") {
+                 item[key] =  item[key]/10;
+                } 
               } if(key == "speed"){
                 if (item[key] !== " ") {
                  item[key] = Math.round(item[key]*100)/100;
                 } 
-              }else{
+              }if(key == "longitude"){
+                if (item[key] !== " ") {
+                 item[key] = Math.round(item[key]*100)/100;
+                } 
+              }if(key == "latitude"){
+                if (item[key] !== " ") {
+                 item[key] = Math.round(item[key]*100)/100;
+                } 
+              }
+              else{
                 return;
               }
             });
@@ -351,11 +381,11 @@ export default {
                   if(this.items[i].insert_time > nowTime){
                       online ++;
                       this.online=online;
-                      console.log(online)  //26
+                      // console.log(online)  //26
                   }else{
                       offline++;
                       this.offline=offline;
-                      console.log(offline)  //38
+                      // console.log(offline)  //38
                   }
               };
           /**
@@ -384,21 +414,27 @@ export default {
           };
 
         //华氏度转摄氏度 以及平均值
-          // for(var o=0;o<this.items.length;o++){
-          //   var t1 = this.items[o].gps_temp1;
-          //   var t2 = this.items[o].gps_temp2;
-          //   var t3 = this.items[o].gps_temp3;
-          //   this.items[o].ambient_temp = (function(t){
-          //     // if (t=='-') { t=='0'};
-          //     if (t1=='-') { t1=='0'};
-          //     if (t2=='-') { t2=='0'};
-          //     if (t3=='-') { t3=='0'};
-          //     t = 't1+t2+t3';
-          //   	return parseInt(10*(t- 32)/1.8)/30;
-          //   })(this.items[o].ambient_temp)
-          //   console.log(this.items[o].ambient_temp)
-          // };)
-        //   };
+          for(var o=0;o<this.items.length;o++){
+            if(this.items[o].gps_temp1=='-'){
+                this.items[o].gps_temp1=='0'
+            }
+            if(this.items[o].gps_temp2=='-'){
+                this.items[o].gps_temp2=='0'
+            }
+            if(this.items[o].gps_temp3=='-'){
+                this.items[o].gps_temp3=='0'
+            };
+            var t1 = Number(this.items[o].gps_temp1);
+            console.log(this.items[o].gps_temp1);
+            var t2 = Number(this.items[o].gps_temp2);
+            var t3 = Number(this.items[o].gps_temp3);
+            this.items[o].ambient_temp = (function(t){
+              t = Math.round(((t1+t2+t3)/3)*100)/100;
+              console.log(t);
+            	return t;
+            })(this.items[o].ambient_temp)
+            // console.log(this.items[o].ambient_temp)
+          };
           //方向描述
          for(var j = 0 ;j<this.items.length;j++){ 
           // console.log(this.items[j].reserve6)
@@ -600,11 +636,11 @@ export default {
 .alert-tab{
   position: fixed;
   z-index:999;
-  width:55%;
+  width:45%;
   border:1px solid gray;
   height:70%;
   margin-top:-40%;
-  margin-left:15%;
+  margin-left:18%;
   background-color:#fff;
   border-radius: 8px;
 }
@@ -614,9 +650,13 @@ export default {
     margin-top:10px;
     color:rgb(83, 163, 233);
 }
-.alert-tab p:hover{
+.dianji p:hover{
     color:black;
+    /* border:2px solid black; */
 }
+/* .dianji click{
+    color:black;
+} */
 .lengji{
   
     display: flex;
@@ -632,6 +672,7 @@ export default {
 }
 .lengji1 {
     width:600px;
+    padding-right:20px;
 }
 .kongzhi{
    margin-top:10%;

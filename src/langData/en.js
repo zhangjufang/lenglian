@@ -88,7 +88,8 @@ const message = {
         contin:'Continuous mode',
         cycle:'Cycle mode',
         airdoor:'Fresh air door',
-        setfte:'set'
+        setfte:'set',
+        cooleronline:'Cooler online'
     }
 }
 export default message;

@@ -39,7 +39,7 @@
         
           <div class="icon">
             <div class="rights" v-if="show" >
-                <!-- <el-select
+                <el-select
                     v-model="value"
                     filterable
                     remote
@@ -55,15 +55,38 @@
                         :label="item.name"
                         :value="item.name">
                     </el-option>
-                </el-select> -->
-                <!-- <div class="list" > -->
+                </el-select>
+             
                   <p style="margin-left:20px;margin-top:10px;"> 所有设备({{items.length}})</p>
                   <div class="list-right" v-for="item in tableData3" :key="item.value" :value="item.value">
                     <img src="../images/car.png" alt="">  
-                    <div class="list" style="margin-top:2px;font-size:13px;float:left;margin-left:18%;">{{item.name}}</div>
+                    <div class="list" style="font-size:13px;float:left;margin-left:18%;"  :click="xiangqinga">{{item.name}}</div>
                    
                   </div>
-                <!-- </div> -->
+            </div>
+            <div class="rights2" v-show="xiangqing">
+                <div style="margin-top:20px;margin-left:20px"> <b>详情:</b> </div>
+                <img src="../images/jzx.png" alt="" style="width:48%;margin-left:20px;">
+                <span style=" float:left;margin-top:-100px;margin-left:60%;"> <b>集装箱名字</b> </span>
+                <div style="margin-left:40px;margin-top:20px;">当前状态：</div>
+                <div style="margin-left:40px;margin-top:20px;">开门次数：</div>
+                <ul class="inbox" >
+                  <li style="margin-top:10px;margin-left:15px;"><b>箱东：</b>经理</li>
+                  <li style="margin-top:10px;margin-left:15px;"><b>联系方式：</b>11122223636</li>
+                  <li style="margin-top:10px;margin-left:15px;margin-bottom:10px;"><b>当前位置：</b>bnbbjhhkljkuugjkjkjkjiuiou</li>
+                </ul>
+                <div style="display: flex;justify-content: space-between;">
+                  <div style="width:150px;height:120px;border-right:1px solid #000;margin-top:20px;">
+                    <b style="font-size:20px;margin-left:30px;">箱内温度</b><br>
+                    <b style="font-size:50px;margin-left:30px;padding-top:20px;display:block;">16°C</b>
+                  </div>
+                  <div style="width:150px;height:120px;margin-top:20px;">
+                    <b style="font-size:20px;margin-left:30px;">箱外温度</b>
+                    <b style="font-size:50px;margin-left:30px;padding-top:20px;display:block;">28°C</b>
+                  </div>
+                </div>
+                <div><img src="" alt=""></div>
+                
             </div>
             <div class="change"><img src="../images/btn.png" alt="" v-on:click="show = !show" ></div>
         </div>
@@ -126,6 +149,7 @@ export default {
       map: null,
       markers:[],
       show:true,
+      xiangqing:false,
       move:false,
       item:'',
       value:''
@@ -168,7 +192,7 @@ export default {
       this.$axios
         .post("/api/d/container_latest_json", this.qs.stringify({}))
         .then(data => {
-          console.log(data.data.result);
+          // console.log(data.data.result);
           var result = data.data.result.map((item,i) => {
             /**
              * 各种-999转换为-
@@ -302,7 +326,6 @@ export default {
             })(this.items[j].reserve6) 
          }
            
-
           // var conNum_online = 0;
           // var conNum_offline = 0;
           // var conNum_alarm = 0;
@@ -367,6 +390,10 @@ export default {
       } else {
         this.options = [];
       }
+    },
+    xiangqinga(){
+      this.xiangqing==true;
+      this.show == false;
     }
   },
   created: function() {},
@@ -395,17 +422,20 @@ export default {
     position: relative;
     float: right;
     display:inline;
+    /* overflow: hidden; */
 }
 .rights{
     width:90%;
-    background-color:#fff;
+    background:#fff;
     float:right;
+    height:100%;
+    
     /* z-index:99999; */
     /* position: relative; */
 }
 .change{
     float: right;
-    margin-top: 35%;
+    margin-top: 40%;
 }
 .icon img{
     margin-right:17.5%;
@@ -422,11 +452,31 @@ export default {
     margin-left: 20px;
     line-height: 35px;
     
-} 
+}
+.rights2{
+    width:90%;
+    background-color:#fff;
+    float:right;
+    height:100%;
+    /* z-index:99999; */
+    /* position: relative; */
+}
+.rights2 ul{
+  border:1px solid gray;
+  box-shadow: 0 0 10px #333;
+  width:80%;
+  /* height:100px; */
+  margin:0 auto;
+  list-style:none;
+  margin-top:20px;
+  
+}
+
 .list-right{
   /* width:100%; */
-  height:20px;
+  /* height:100%; */
   overflow: hidden;
+  padding-top:5px;
   background-color: #fff;
 }
 .list-right img{

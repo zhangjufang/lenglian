@@ -63,6 +63,7 @@ const message =  {
         temp1:'温度1',
         temp2:'温度2',
         temp3:'温度3',
+        cooleronline:'冷机通讯',
         Averagetemp:'平均温度',
         level:'油位',
         speed:'速度',
